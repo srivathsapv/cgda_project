@@ -4,3 +4,7 @@
 *.log
 *.out
 *.synctex.gz
+*.fa
+*.fasta
+*.gz
+.ipynb_checkpoints/
