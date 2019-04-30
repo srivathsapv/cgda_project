@@ -1,0 +1,23 @@
+{
+    "hybrid_vae_ordinal": {
+        "sequences": "data/hybrid_vae/ordinal_sequences.txt"
+    },
+    "hybrid_vae_kmer_4": {
+        "features": "data/hybrid_vae/features_4mer.npy"
+    },
+    "hybrid_vae_kmer_5": {
+        "features": "data/hybrid_vae/features_5mer.npy"
+    },
+    "lstm_vae_vector": {
+        "train": "data/lstm_vae/vector_train.csv",
+        "test": "data/lstm_vae/vector_test.csv"
+    },
+    "lstm_vae_kmer_4": {
+        "train": "data/lstm_vae/kmer_4_train.csv",
+        "test": "data/lstm_vae/kmer_4_test.csv"
+    },
+    "lstm_vae_kmer_5": {
+        "train": "data/lstm_vae/kmer_5_train.csv",
+        "test": "data/lstm_vae/kmer_5_test.csv"
+    }
+}
