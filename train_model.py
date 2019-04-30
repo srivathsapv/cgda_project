@@ -5,6 +5,7 @@ import json
 
 import ml.utils as utils
 
+
 def parse_args():
     parser = argparse.ArgumentParser(description='Taxonomic Classification')
 
@@ -18,12 +19,14 @@ def parse_args():
                               'are {}'.format(','.join(model_names))),
                         choices=set(model_names))
 
-    parser.add_argument('--output-path', type=str, help='Path to store training artifacts - network weights, analysis plots etc')
+    parser.add_argument('--output-path', type=str,
+                        help='Path to store training artifacts - network weights, analysis plots etc')
 
     parser.add_argument('--use-gpu', type=bool, default=False,
                         help='If True, GPU device is used for training (default: False)')
 
     return parser.parse_args()
+
 
 def get_interface_module(model_name):
     for fpath_interface in glob('ml/**/interface.py', recursive=True):
@@ -35,6 +38,7 @@ def get_interface_module(model_name):
 
     raise ValueError('Model not implemented')
 
+
 def train():
     args = parse_args()
 
@@ -43,6 +47,7 @@ def train():
     interface = get_interface_module(args.model_name)
     interface.train_model(data_config[args.model_name], args.output_path,
                           args.use_gpu, verbose=1, args=args)
+
 
 if __name__ == '__main__':
     train()
