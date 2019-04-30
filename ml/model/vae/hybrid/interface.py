@@ -14,7 +14,7 @@ from ml.model.vae.hybrid.vae import VAE
 
 RUN_OPTIONS = ["hybrid_vae_ordinal", "hybrid_vae_kmer_4", "hybrid_vae_kmer_5"]
 
-def train_model(fpath_data, dirpath_results, use_gpu=True, verbose=True,
+def train_model(data_config, dirpath_results, use_gpu=True, verbose=True,
                 args=None):
 
     feature_type = args.model_name.replace('hybrid_vae_', '')
@@ -23,7 +23,11 @@ def train_model(fpath_data, dirpath_results, use_gpu=True, verbose=True,
 
     t.cuda.empty_cache()
 
-    batch_loader = BatchLoader(data_path=fpath_data, is_kmer=('kmer' in feature_type))
+    is_kmer = ('kmer' in feature_type)
+    fpath_data = (data_confog['features']
+                  if is_kmer else data_config['sequences'])
+
+    batch_loader = BatchLoader(data_path=fpath_data, is_kmer=(is_kmer))
     parameters = Parameters(batch_loader.vocab_size, feature_type=feature_type)
 
     vae = VAE(parameters)

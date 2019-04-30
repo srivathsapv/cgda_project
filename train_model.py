@@ -1,6 +1,7 @@
 import argparse
 import importlib
 from glob import glob
+import json
 
 import ml.utils as utils
 
@@ -16,7 +17,6 @@ def parse_args():
                         help=('Name of the model to train. Possible values ' +
                               'are {}'.format(','.join(model_names))),
                         choices=set(model_names))
-    parser.add_argument('--data-path', type=str, help='Path to the file that contains training/validation data')
 
     parser.add_argument('--output-path', type=str, help='Path to store training artifacts - network weights, analysis plots etc')
 
@@ -38,8 +38,11 @@ def get_interface_module(model_name):
 def train():
     args = parse_args()
 
+    data_config = json.loads(open('config/data_files.json', 'r').read())
+
     interface = get_interface_module(args.model_name)
-    interface.train_model(args.data_path, args.output_path, args.use_gpu, verbose=1, args=args)
+    interface.train_model(data_config[args.model_name], args.output_path,
+                          args.use_gpu, verbose=1, args=args)
 
 if __name__ == '__main__':
     train()
