@@ -25,25 +25,21 @@ def train(train_data, valid_data, test_data, model, loss_fun, optimizer, dirpath
     metrics_file = exp_dir+'/metrics_best.tsv'
     with open(metrics_file,'w') as fout:
         for epoch in range(epochs):
-            acc, loss = train_one_epoch(train_data[:2], model, loss_fun, optimizer, device)
-
-            state = {'iter_num': epoch+1,
-                     'enc_state': model.state_dict(),
-                     'opt_state': optimizer.state_dict(),
-                     }
-            filename = 'state_%010d.pt' % (epoch+1)
-            save_file = exp_dir + '/' + filename
-            torch.save(state, save_file)
-            logger.info('wrote checkpoint to '+save_file)
-
+            random.shuffle(train_data)
+            acc, loss = train_one_epoch(train_data[:1000], model, loss_fun, optimizer, device)
             vacc = inference(valid_data, model, loss_fun, device)
             tacc = inference(test_data, model, loss_fun, device)
             print(acc, vacc, tacc, loss, sep='\t', file=fout)
+            logger.info('iter: {}, iter/n_iters: {}%'.format(epoch+1, ((epoch+1) / epochs) * 100))
 
+    state = {'iter_num': epoch+1,
+             'enc_state': model.state_dict(),
+             'opt_state': optimizer.state_dict(),
+                     }
     filename = 'bestmodel.pt'
     save_file = exp_dir + '/' + filename
     torch.save(state, save_file)
-    logger.info('saved final model to '+save_file)
+    logger.info('Saving final model to '+save_file)
 
 
 def train_one_epoch(train_data, model, loss_fun, optimizer, device):
