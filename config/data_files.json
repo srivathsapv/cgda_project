@@ -19,5 +19,11 @@
     "lstm_vae_kmer_5": {
         "train": "data/lstm_vae/kmer_5_train.csv",
         "test": "data/lstm_vae/kmer_5_test.csv"
+    },
+    "basic_kmer": {
+        "dirpath_kmer": "data/kmer"
+    },
+    "basic_vector": {
+        "dirpath_vector": "data/hierarchy"
     }
 }
