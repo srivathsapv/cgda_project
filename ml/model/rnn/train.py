@@ -5,8 +5,6 @@ import torch.nn.functional as F
 import torch.optim as optim
 import random
 import logging
-import datetime
-import time
 import pandas as pd
 import glob
 import os
@@ -24,7 +22,6 @@ def train(train_data, valid_data, test_data, model, loss_fun, optimizer, dirpath
     if not os.path.exists(exp_dir):
         os.makedirs(exp_dir)
     
-    start = time.time()
     metrics_file = exp_dir+'/metrics_best.tsv'
     with open(metrics_file,'w') as fout:
         for epoch in range(epochs):
