@@ -2,6 +2,8 @@ import argparse
 import importlib
 from glob import glob
 
+import ml.utils as utils
+
 def parse_args():
     parser = argparse.ArgumentParser(description='Taxonomic Classification')
 

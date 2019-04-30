@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from tqdm import tqdm
 
 import torch as t
 from torch.optim import Adam
@@ -36,7 +37,9 @@ def train_model(fpath_data, dirpath_results, use_gpu=True, verbose=True,
     min_ce = 1000
     min_vae = None
 
-    for iteration in range(hyperparams['num_iterations']):
+    num = hyperparams['num_iterations']
+    
+    for iteration in tqdm(range(num), total=num):
         '''Train step'''
         input, decoder_input, target = batch_loader.next_batch(hyperparams['batch_size'], 'train', use_gpu)
         target = target.view(-1)
