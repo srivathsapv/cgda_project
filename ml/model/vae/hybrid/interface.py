@@ -24,7 +24,7 @@ def train_model(data_config, dirpath_results, use_gpu=True, verbose=True,
     t.cuda.empty_cache()
 
     is_kmer = ('kmer' in feature_type)
-    fpath_data = (data_confog['features']
+    fpath_data = (data_config['features']
                   if is_kmer else data_config['sequences'])
 
     batch_loader = BatchLoader(data_path=fpath_data, is_kmer=(is_kmer))
