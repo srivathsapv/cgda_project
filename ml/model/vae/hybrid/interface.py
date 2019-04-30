@@ -38,7 +38,7 @@ def train_model(fpath_data, dirpath_results, use_gpu=True, verbose=True,
     min_vae = None
 
     num = hyperparams['num_iterations']
-    
+
     for iteration in tqdm(range(num), total=num):
         '''Train step'''
         input, decoder_input, target = batch_loader.next_batch(hyperparams['batch_size'], 'train', use_gpu)
@@ -96,14 +96,7 @@ def train_model(fpath_data, dirpath_results, use_gpu=True, verbose=True,
                 logger.info('Saving best model in iteration {}'.format(iteration))
                 t.save(vae.state_dict(), '{}/kmer-best.pth'.format(dirpath_results))
 
-        if iteration % 1000 == 0:
-            logger.info('Saving model in iteration {}'.format(iteration))
-            t.save(vae.state_dict(), '{}/kmer-{}.pth'.format(dirpath_results, iteration))
-
     fname = batch_loader.data_path.split('/')[-1].split('.')[0]
     logger.info('Saving final metrics')
     df_metrics = pd.DataFrame(metrics)
     df_metrics.to_csv('{}/metrics_{}.csv'.format(dirpath_results, fname))
-
-    logger.info('Saving final model')
-    t.save(vae.state_dict(), '{}/kmer-final.pth'.format(dirpath_results))
