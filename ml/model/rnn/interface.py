@@ -44,7 +44,6 @@ def train_model(data_config, dirpath_results, use_gpu=False, verbose=True,args=N
     valid_data = load_data(data_config['classval'])
     test_data = load_data(data_config['classtest'])
     model = LSTMClassifier(parameters.embedding_dim, parameters.hidden_dim, parameters.vocab_size, parameters.label_size, parameters.batch_size, device).to(device)
-
     loss_fun = nn.NLLLoss()
     optimizer = optim.Adam(model.parameters(),lr = learning_rate)
     train(train_data, valid_data, test_data, model, loss_fun, optimizer, dirpath_results, parameters.epochs, device, logger, 'rnn_class')
