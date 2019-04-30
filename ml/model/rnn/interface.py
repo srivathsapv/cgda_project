@@ -19,7 +19,7 @@ RUN_OPTIONS = ["rnn"]
 def train_model(data_config, dirpath_results, use_gpu=False, verbose=True,args=None):
 
     if use_gpu:
-        device=torch.device("cpu")
+        device=torch.device("cuda")
     else:
         device=torch.device("cpu")
 
