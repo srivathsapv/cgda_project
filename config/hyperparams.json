@@ -1,0 +1,61 @@
+{
+  "hybrid_vae": {
+    "learning_rate": 0.0005,
+    "num_iterations": 5000,
+    "batch_size": 30,
+    "dropout": 0.12,
+    "aux": 0.4,
+    "embed_size": 16,
+    "latent_size": 100,
+    "decoder_rnn_size": 1000,
+    "decoder_rnn_num_layers": 1
+  },
+  "lstm_vae": {
+    "num_iterations": 20,
+    "batch_size": 1,
+    "intermediate_dim": 210,
+    "latent_dim": 100,
+    "epsilon_std": 1
+  },
+  "basic_kmer": {
+    "kmin": 1,
+    "kmax": 6,
+    "svm": {
+      "cache_size": 7000,
+      "gamma": "auto",
+      "C": 0.6
+    },
+    "random_forest": {
+      "n_estimators": 5
+    }
+  },
+  "basic_vector": {
+    "svm": {
+      "kernel": "rbf"
+    },
+    "random_forest": {}
+  },
+  "cnn_qrcode": {
+    "phylum": {
+      "lr": 0.01,
+      "weight_decay": 0.00001,
+      "epoch": 25,
+      "batch_size": 32,
+      "device": "cpu"
+    },
+    "class": {
+      "lr": 0.01,
+      "weight_decay": 0.0001,
+      "epoch": 25,
+      "batch_size": 32,
+      "device": "cpu"
+    },
+    "order": {
+      "lr": 0.01,
+      "weight_decay": 0.0001,
+      "epoch": 25,
+      "batch_size": 32,
+      "device": "cpu"
+    }
+  }
+}
