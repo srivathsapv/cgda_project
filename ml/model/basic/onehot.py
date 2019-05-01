@@ -33,12 +33,25 @@ def string_to_array(my_string):
 def ordinal_encoder(my_array):
     integer_encoded = label_encoder.transform(my_array)
     float_encoded = integer_encoded.astype(float)
-    float_encoded[float_encoded == 0] = 0.25 # A
-    float_encoded[float_encoded == 1] = 0.50 # C
-    float_encoded[float_encoded == 2] = 0.75 # G
-    float_encoded[float_encoded == 3] = 1.00 # T
-    float_encoded[float_encoded == 4] = 1.25
-    return float_encoded
+    data = []
+    for i in range(float_encoded.shape[0]):
+    	# print(float_encoded[i])
+    	if float_encoded[i] == 0:
+    		data.append([1,0,0,0,0])
+    	elif float_encoded[i] == 1:
+    		data.append([0,1,0,0,0])
+    	elif float_encoded[i] == 2:
+    		data.append([0,0,1,0,0])
+    	elif float_encoded[i] == 3:
+    		data.append([0,0,0,1,0])
+    	elif float_encoded[i] == 4:
+    		data.append([0,0,0,0,1])
+    # float_encoded[float_encoded == 0] = [1,0,0,0,0] # A
+    # float_encoded[float_encoded == 1] = [0,1,0,0,0] # C
+    # float_encoded[float_encoded == 2] = [0,0,1,0,0] # G
+    # float_encoded[float_encoded == 3] = [0,0,0,1,0] # T
+    # float_encoded[float_encoded == 4] = [0,0,0,0,1]
+    return data
 
 def train_basic(dirpath_vector, dirpath_output, verbose=True):
 	logger = utils.get_logger(verbose)
@@ -64,7 +77,7 @@ def train_basic(dirpath_vector, dirpath_output, verbose=True):
 		if len(item)>maxi:
 			maxi = len(item)
 
-	final1 = np.zeros((x_train.shape[0]-1, maxi))
+	final1 = np.zeros((x_train.shape[0]-1, maxi,5))
 
 	count = 0
 	for item in arr:
@@ -76,7 +89,7 @@ def train_basic(dirpath_vector, dirpath_output, verbose=True):
 		if len(item)>maxi1:
 			maxi1 = len(item)
 
-	final2 = np.zeros((x_test.shape[0]-1, maxi1))
+	final2 = np.zeros((x_test.shape[0]-1, maxi1,5))
 
 	count = 0
 	for item in arr1:
@@ -88,7 +101,7 @@ def train_basic(dirpath_vector, dirpath_output, verbose=True):
 		if len(item)>maxi2:
 			maxi2 = len(item)
 
-	final3 = np.zeros((x_val.shape[0]-1, maxi2))
+	final3 = np.zeros((x_val.shape[0]-1, maxi2,5))
 
 	count = 0
 	for item in arr2:
@@ -133,7 +146,7 @@ def train_basic(dirpath_vector, dirpath_output, verbose=True):
 		if len(item)>maxi:
 			maxi = len(item)
 
-	final1 = np.zeros((x_train.shape[0]-1, maxi))
+	final1 = np.zeros((x_train.shape[0]-1, maxi,5))
 
 	count = 0
 	for item in arr:
@@ -145,7 +158,7 @@ def train_basic(dirpath_vector, dirpath_output, verbose=True):
 		if len(item)>maxi1:
 			maxi1 = len(item)
 
-	final2 = np.zeros((x_test.shape[0]-1, maxi1))
+	final2 = np.zeros((x_test.shape[0]-1, maxi1,5))
 
 	count = 0
 	for item in arr1:
@@ -157,7 +170,7 @@ def train_basic(dirpath_vector, dirpath_output, verbose=True):
 		if len(item)>maxi2:
 			maxi2 = len(item)
 
-	final3 = np.zeros((x_val.shape[0]-1, maxi2))
+	final3 = np.zeros((x_val.shape[0]-1, maxi2,5))
 
 	count = 0
 	for item in arr2:
@@ -239,14 +252,21 @@ def train_basic(dirpath_vector, dirpath_output, verbose=True):
 	clf = RandomForestClassifier()
 
 
-	clf2.fit(X, label)
-	clf.fit(X, label)
+	newX = X.reshape(X.shape[0],X.shape[1]*X.shape[2])
+	newY = Y.reshape(Y.shape[0],Y.shape[1]*Y.shape[2])
+	clf2.fit(newX, label)
+	clf.fit(newX, label)
 
-	preds2 = clf2.predict(X)
-	preds = clf.predict(X)
+	preds2 = clf2.predict(newX)
+	preds = clf.predict(newX)
 
-	scores = clf2.decision_function(X)
-	scores2 = clf.predict(X)
+	preds2_test = clf2.predict(newY)
+	preds_test = clf.predict(newY)
+	np.save(dirpath_output + 'SVM_phylum_predictions', preds2_test)
+	np.save(dirpath_output + 'RF_phylum_predictions', preds_test)
+
+	scores = clf2.decision_function(newX)
+	scores2 = clf.predict(newX)
 
 	# print (scores)
 	score = np.amax(scores, axis = 1) 
@@ -314,13 +334,20 @@ def train_basic(dirpath_vector, dirpath_output, verbose=True):
 	clf2 = RandomForestClassifier()
 	clf = SVC(kernel = 'rbf')
 
+	newX = X.reshape(X.shape[0],X.shape[1]*X.shape[2])
+	newY = Y.reshape(Y.shape[0],Y.shape[1]*Y.shape[2])
+	clf2.fit(newX, label)
+	clf.fit(newX, label)
+	preds2 = clf2.predict(newX)
+	preds = clf.predict(newX)
+	scores = clf2.predict(newX)
+	scores1 = clf.decision_function(newX)
 
-	clf2.fit(X, label)
-	clf.fit(X, label)
-	preds2 = clf2.predict(X)
-	preds = clf.predict(X)
-	scores = clf2.predict(X)
-	scores1 = clf.decision_function(X)
+	preds2_test = clf2.predict(newY)
+	preds_test = clf.predict(newY)
+
+	np.save(dirpath_output + 'SVM_class_predictions', preds2_test)
+	np.save(dirpath_output + 'RF_class_predictions', preds_test)
 
 	score = np.amax(scores1, axis = 1) 
 

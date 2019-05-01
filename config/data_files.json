@@ -25,5 +25,8 @@
     },
     "basic_vector": {
         "dirpath_vector": "data/hierarchy"
+    },
+    "basic_onehot": {
+        "dirpath_onehot": "data/hierarchy"
     }
 }

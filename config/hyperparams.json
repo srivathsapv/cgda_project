@@ -18,4 +18,12 @@
             "n_estimators": 5
         }
     }
+
+    "basic_vector": {
+        "svm": {
+            "kernel": rbf
+        },
+        "random_forest": {
+        }
+    }
 }
