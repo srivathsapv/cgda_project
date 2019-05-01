@@ -8,8 +8,7 @@ import ml.utils as utils
 def parse_args():
     parser = argparse.ArgumentParser(description='Taxonomic Classification')
 
-    model_names = ['svm_kmer', 'random_forest_kmer', 'svm_vector',
-                   'random_forest_vector', 'cnn_qrcode', 'rnn', 'lstm_vae',
+    model_names = ['basic_kmer', 'basic_vector', 'basic_onehot', 'cnn_qrcode', 'rnn', 'lstm_vae',
                    'hybrid_vae_ordinal', 'hybrid_vae_kmer_4',
                    'hybrid_vae_kmer_5']
 
@@ -37,12 +36,13 @@ def get_interface_module(model_name):
 
 def train():
     args = parse_args()
-
+    utils.init_logger(verbose=True)
+    
     data_config = json.loads(open('config/data_files.json', 'r').read())
 
     interface = get_interface_module(args.model_name)
-    interface.train_model(data_config[args.model_name], args.output_path,
-                          args.use_gpu, verbose=1, args=args)
+    interface.train_model(data_config, args.output_path,
+                          args.use_gpu, verbose=True, args=args)
 
 if __name__ == '__main__':
     train()
