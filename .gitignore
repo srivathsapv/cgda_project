@@ -8,10 +8,12 @@
 *.fasta
 *.gz
 .ipynb_checkpoints/
-*.csv
 *.DS_Store
 __pycache__
+data/hierarchy
+data/vae
+data/kmer
+data/cnn
 data/**/*.npy
 data/**/*.txt
 data/**/*.jpg
-data/hierarchy
