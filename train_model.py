@@ -36,7 +36,8 @@ def get_interface_module(model_name):
 
 def train():
     args = parse_args()
-
+    utils.init_logger(verbose=True)
+    
     data_config = json.loads(open('config/data_files.json', 'r').read())
 
     interface = get_interface_module(args.model_name)
