@@ -18,45 +18,52 @@ from ml.model.rnn.parameters import Parameters
 
 RUN_OPTIONS = ["rnn"]
 
-def train_model(data_config, dirpath_results, use_gpu=False, verbose=True,args=None):
+def train_model(path_config, args=None):
 
-    if use_gpu:
+    if torch.cuda.is_available():
         device=torch.device("cuda")
     else:
         device=torch.device("cpu")
-    logger = utils.get_logger(verbose)
-    hyperparams = utils.get_model_hyperparams('rnn')
+        
+    logger = utils.get_logger()
+    hyperparams = utils.get_model_hyperparams("rnn")
     learning_rate = hyperparams['learning_rate']
+    path_config = path_config['rnn']
+    dirpath_results = path_config['dirpath_rnn']
+    
 
     logger.info('Training RNN Phylum Classifier')
     parameters = Parameters('phylum')
-    train_data = load_data(data_config['phylumtrain'])
-    valid_data = load_data(data_config['phylumval'])
-    test_data = load_data(data_config['phylumtest'])
+    data_config = path_config['phylum']
+    train_data = load_data(data_config['train'])
+    valid_data = load_data(data_config['val'])
+    test_data = load_data(data_config['test'])
     model = LSTMClassifier(parameters.embedding_dim, parameters.hidden_dim, parameters.vocab_size, parameters.label_size, device).to(device)
     loss_fun = nn.NLLLoss()
     optimizer = optim.Adam(model.parameters(),lr = learning_rate)
-    train(train_data, valid_data, test_data, model, loss_fun, optimizer, dirpath_results, parameters, device, logger, use_gpu, 'rnn_phylum')
+    train(train_data, valid_data, test_data, model, loss_fun, optimizer, dirpath_results, parameters, device, logger, args.is_demo, 'rnn_phylum')
 
     logger.info('Training RNN Class Classifier')
     parameters = Parameters('class')
-    train_data = load_data(data_config['classtrain'])
-    valid_data = load_data(data_config['classval'])
-    test_data = load_data(data_config['classtest'])
+    data_config = path_config['class']
+    train_data = load_data(data_config['train'])
+    valid_data = load_data(data_config['val'])
+    test_data = load_data(data_config['test'])
     model = LSTMClassifier(parameters.embedding_dim, parameters.hidden_dim, parameters.vocab_size, parameters.label_size, device).to(device)
     loss_fun = nn.NLLLoss()
     optimizer = optim.Adam(model.parameters(),lr = learning_rate)
-    train(train_data, valid_data, test_data, model, loss_fun, optimizer, dirpath_results, parameters, device, logger, use_gpu, 'rnn_class')
+    train(train_data, valid_data, test_data, model, loss_fun, optimizer, dirpath_results, parameters, device, logger, args.is_demo, 'rnn_class')
 
     logger.info('Training RNN Order Classifier')
     parameters = Parameters('order')
-    train_data = load_data(data_config['ordertrain'])
-    valid_data = load_data(data_config['orderval'])
-    test_data = load_data(data_config['ordertest'])
+    data_config = path_config['order']
+    train_data = load_data(data_config['train'])
+    valid_data = load_data(data_config['val'])
+    test_data = load_data(data_config['test'])
     model = LSTMClassifier(parameters.embedding_dim, parameters.hidden_dim, parameters.vocab_size, parameters.label_size, device).to(device)
     loss_fun = nn.NLLLoss()
     optimizer = optim.Adam(model.parameters(),lr = learning_rate)
-    train(train_data, valid_data, test_data, model, loss_fun, optimizer, dirpath_results, parameters, device, logger, use_gpu, 'rnn_order')
+    train(train_data, valid_data, test_data, model, loss_fun, optimizer, dirpath_results, parameters, device, logger, args.is_demo, 'rnn_order')
     
 
 

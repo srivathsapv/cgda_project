@@ -12,7 +12,7 @@ import numpy as np
 
 import ml.utils as utils
 
-def train(train_data, valid_data, test_data, model, loss_fun, optimizer, dirpath_results, parameters, device, logger, use_gpu, exp_name):
+def train(train_data, valid_data, test_data, model, loss_fun, optimizer, dirpath_results, parameters, device, logger, is_demo, exp_name):
 
 
     logdir = dirpath_results
@@ -26,7 +26,7 @@ def train(train_data, valid_data, test_data, model, loss_fun, optimizer, dirpath
 
     epochs = parameters.epochs
     batch_size = parameters.batch_size
-    if not use_gpu:
+    if is_demo:
         batch_size = 10
         valid_data = valid_data[:10]
         test_data = test_data[:10]
@@ -40,7 +40,7 @@ def train(train_data, valid_data, test_data, model, loss_fun, optimizer, dirpath
         metrics.append([acc, vacc, tacc, loss])
         logger.info('iter: {}, iter/n_iters: {}%'.format(epoch+1, ((epoch+1) / epochs) * 100))
 
-    if use_gpu:
+    if not is_demo:
         state = {'iter_num': epoch+1,
              'enc_state': model.state_dict(),
              'opt_state': optimizer.state_dict(),
