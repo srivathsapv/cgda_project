@@ -48,7 +48,7 @@ def train_basic(models, dirpath_kmer, dirpath_output, kmin, kmax, verbose=True):
                 combined_val_data.append(df_val.values[:, :-2].astype(np.float16))
 
                 logger.info('Train F1 Score for {} model for {} level and k={} is {:.3f}'.format(model_str, level, k, train_f1))
-                np.save('{}/preds_{}_{}mer.npy'.format(dirpath_output, level, k), pred_val)
+                np.save('{}/{}_preds_{}_{}mer.npy'.format(dirpath_output, model_str, level, k), pred_val)
 
             combined_train_data = np.hstack(combined_train_data)
             combined_val_data = np.hstack(combined_val_data)
@@ -63,4 +63,4 @@ def train_basic(models, dirpath_kmer, dirpath_output, kmin, kmax, verbose=True):
 
             logger.info(('Train F1 Score for {} model for {} level and ' +
                         'combined K from 1-5 is {:.3f}').format(model_str, level, combined_f1))
-            np.save('{}/preds_{}_combined.npy'.format(dirpath_output, level), combined_pred)
+            np.save('{}/{}_preds_{}_combined.npy'.format(dirpath_output, model_str, level), combined_pred)
