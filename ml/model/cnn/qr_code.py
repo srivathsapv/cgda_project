@@ -103,9 +103,10 @@ def encode_and_dump(input_path, output_path):
 
     for level in tqdm(levels, total=len(levels)):
         data = load_train_val_test_data(input_path, level, analyze=False)
-        def groupby(l, n): return [tuple(l[i:i+n])
+        def groupby(l, n): return [tuple(l[i:i + n])
                                    for i in range(0, len(l), n)]
-        for split_name, (sequences, labels) in zip(["train", "val", "test"], groupby(data, 2)):
+        for split_name, (sequences, labels) in zip(
+                ["train", "val", "test"], groupby(data, 2)):
             sequences_to_rgb_images(sequences, labels, os.path.join(
                 output_path, level, split_name))
 

@@ -122,7 +122,7 @@ class ConvNet(nn.Module):
             nn.BatchNorm2d(32),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2, stride=2))
-        self.fc = nn.Linear(5*5*32, num_classes)
+        self.fc = nn.Linear(5 * 5 * 32, num_classes)
 
     def forward(self, x):
         out = self.layer1(x)
@@ -188,7 +188,7 @@ def cnn_train_model(model, train_loader, test_loader, optimizer, EPOCH):
             pred = scores.data.max(1, keepdim=True)[1]
             correct += pred.eq(b_y.data.view_as(pred)).long().cpu().sum()
 
-        loss_test[epoch] = test_loss/len(test_loader.dataset)
+        loss_test[epoch] = test_loss / len(test_loader.dataset)
         acc_test[epoch] = 100 * float(correct) / \
             float(len(test_loader.dataset))
         time_test[epoch] = time.perf_counter() - t0
@@ -196,7 +196,8 @@ def cnn_train_model(model, train_loader, test_loader, optimizer, EPOCH):
     return [acc_train, acc_test, loss_train, loss_test]
 
 
-def cnn_train_eval(level, model, eval_on="test", cnn_config={"lr": 0.001, "weight_decay": 0}):
+def cnn_train_eval(level, model, eval_on="test", cnn_config={
+                   "lr": 0.001, "weight_decay": 0}):
     # load train-test data and convert to a PyTorch Dataset of QRCode images
     train_sequences, train_labels, val_sequences, val_labels, test_sequences, test_labels = load_train_val_test_data(
         level, analyze=False)

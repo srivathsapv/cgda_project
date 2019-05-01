@@ -69,7 +69,7 @@ def train_basic(dirpath_vector, dirpath_output, verbose=True):
         if len(item) > maxi:
             maxi = len(item)
 
-    final1 = np.zeros((x_train.shape[0]-1, maxi))
+    final1 = np.zeros((x_train.shape[0] - 1, maxi))
 
     count = 0
     for item in arr:
@@ -81,7 +81,7 @@ def train_basic(dirpath_vector, dirpath_output, verbose=True):
         if len(item) > maxi1:
             maxi1 = len(item)
 
-    final2 = np.zeros((x_test.shape[0]-1, maxi1))
+    final2 = np.zeros((x_test.shape[0] - 1, maxi1))
 
     count = 0
     for item in arr1:
@@ -93,7 +93,7 @@ def train_basic(dirpath_vector, dirpath_output, verbose=True):
         if len(item) > maxi2:
             maxi2 = len(item)
 
-    final3 = np.zeros((x_val.shape[0]-1, maxi2))
+    final3 = np.zeros((x_val.shape[0] - 1, maxi2))
 
     count = 0
     for item in arr2:
@@ -132,7 +132,7 @@ def train_basic(dirpath_vector, dirpath_output, verbose=True):
         if len(item) > maxi:
             maxi = len(item)
 
-    final1 = np.zeros((x_train.shape[0]-1, maxi))
+    final1 = np.zeros((x_train.shape[0] - 1, maxi))
 
     count = 0
     for item in arr:
@@ -144,7 +144,7 @@ def train_basic(dirpath_vector, dirpath_output, verbose=True):
         if len(item) > maxi1:
             maxi1 = len(item)
 
-    final2 = np.zeros((x_test.shape[0]-1, maxi1))
+    final2 = np.zeros((x_test.shape[0] - 1, maxi1))
 
     count = 0
     for item in arr1:
@@ -156,7 +156,7 @@ def train_basic(dirpath_vector, dirpath_output, verbose=True):
         if len(item) > maxi2:
             maxi2 = len(item)
 
-    final3 = np.zeros((x_val.shape[0]-1, maxi2))
+    final3 = np.zeros((x_val.shape[0] - 1, maxi2))
 
     count = 0
     for item in arr2:
@@ -244,7 +244,7 @@ def train_basic(dirpath_vector, dirpath_output, verbose=True):
     for i in range(preds2.shape[0]):
         if preds2[i] == label[i]:
             match2 += 1
-    accuracy2 = float(match2)/preds2.shape[0]
+    accuracy2 = float(match2) / preds2.shape[0]
     p, r, f1, s = precision_recall_fscore_support(
         label, preds2, average='weighted')
 
@@ -252,7 +252,7 @@ def train_basic(dirpath_vector, dirpath_output, verbose=True):
     for i in range(preds.shape[0]):
         if preds[i] == label[i]:
             match += 1
-    accuracy = float(match)/preds.shape[0]
+    accuracy = float(match) / preds.shape[0]
     p2, r2, f12, s = precision_recall_fscore_support(
         label, preds, average='weighted')
 
@@ -320,7 +320,7 @@ def train_basic(dirpath_vector, dirpath_output, verbose=True):
     for i in range(preds2.shape[0]):
         if preds2[i] == label[i]:
             match2 += 1
-    accuracy2 = float(match2)/preds2.shape[0]
+    accuracy2 = float(match2) / preds2.shape[0]
     p, r, f1, s = precision_recall_fscore_support(
         label, preds2, average='weighted')
     C = confusion_matrix(label, preds2)
@@ -329,7 +329,7 @@ def train_basic(dirpath_vector, dirpath_output, verbose=True):
     for i in range(preds.shape[0]):
         if preds[i] == label[i]:
             match += 1
-    accuracy = float(match)/preds.shape[0]
+    accuracy = float(match) / preds.shape[0]
     p2, r2, f12, s = precision_recall_fscore_support(
         label, preds, average='weighted')
 

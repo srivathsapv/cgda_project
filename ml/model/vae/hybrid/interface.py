@@ -95,7 +95,7 @@ def train_model(path_config, args=None):
             train_ce = cross_entropy.data.cpu().numpy() / \
                 (1024 * hyperparams['batch_size'])
             train_aux_ce = aux_cross_entropy.data.cpu(
-            ).numpy()/(1024 * hyperparams['batch_size'])
+            ).numpy() / (1024 * hyperparams['batch_size'])
             train_kl = kld.data.cpu().numpy() / \
                 (1024 * hyperparams['batch_size'])
 
@@ -104,7 +104,7 @@ def train_model(path_config, args=None):
             valid_aux_ce = valid_aux_cross_entropy.data.cpu().numpy() / \
                 (1024 * hyperparams['batch_size'])
             valid_kl = valid_kld.data.cpu().numpy(
-            )/(1024 * hyperparams['batch_size'])
+            ) / (1024 * hyperparams['batch_size'])
 
             metrics.append({
                 'train_ce': train_ce,

@@ -10,6 +10,7 @@ model_names = ['basic_kmer', 'basic_vector', 'basic_onehot', 'cnn_qrcode', 'rnn'
                'hybrid_vae_ordinal', 'hybrid_vae_kmer_4',
                'hybrid_vae_kmer_5']
 
+
 def parse_args():
     parser = argparse.ArgumentParser(description='Taxonomic Classification')
 
@@ -39,14 +40,16 @@ def train():
     args = parse_args()
 
     if not args.model_name:
-        raise ValueError('Model name is mandatory and should be one of - {}'.format(','.join(model_names)))
+        raise ValueError(
+            'Model name is mandatory and should be one of - {}'.format(','.join(model_names)))
 
     data_dirpaths = ['cnn', 'hierarchy', 'vae', 'kmer']
 
     for data_dirpath in data_dirpaths:
         dirpath = os.path.join('data', data_dirpath)
         if not os.path.exists(dirpath):
-            raise ValueError('Directory \'{}\' not found. Please run process_data.py before proceeding!'.format(dirpath))
+            raise ValueError(
+                'Directory \'{}\' not found. Please run process_data.py before proceeding!'.format(dirpath))
 
     path_config = json.loads(open('config/paths.json', 'r').read())
 

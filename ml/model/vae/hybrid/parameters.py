@@ -9,7 +9,8 @@ class Parameters:
             open(fpath_params, 'r').read())[feature_type]
 
         fpath_hyperparams = 'config/hyperparams.json'
-        self.hyperparams = json.loads(open(fpath_hyperparams, 'r').read())['hybrid_vae']
+        self.hyperparams = json.loads(
+            open(fpath_hyperparams, 'r').read())['hybrid_vae']
 
         self.vocab_size = vocab_size
         self.embed_size = self.hyperparams['embed_size']

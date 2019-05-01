@@ -4,7 +4,8 @@ import torch.nn.functional as F
 
 
 class Decoder(nn.Module):
-    def __init__(self, vocab_size, latent_variable_size, rnn_size, rnn_num_layers, embed_size, kernel_params={}):
+    def __init__(self, vocab_size, latent_variable_size, rnn_size,
+                 rnn_num_layers, embed_size, kernel_params={}):
         super(Decoder, self).__init__()
 
         self.vocab_size = vocab_size
