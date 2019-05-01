@@ -8,11 +8,9 @@ import ml.utils as utils
 
 RUN_OPTIONS = ['basic_kmer', 'basic_vector', 'basic_onehot']
 
-def train_model(data_config, dirpath_results, use_gpu=True, verbose=True,
-               args=None):
-
+def train_model(path_config, verbose=True, args=None):
    if args.model_name == 'basic_kmer':
-       data_config = data_config['basic_kmer']
+       path_config = path_config['basic_kmer']
        kmer_config = utils.get_model_hyperparams('basic_kmer')
 
        models = [
@@ -21,22 +19,22 @@ def train_model(data_config, dirpath_results, use_gpu=True, verbose=True,
        ]
 
        kmer_train_basic(
-           models, dirpath_kmer=data_config['dirpath_kmer'],
-           dirpath_output=dirpath_results, kmin=kmer_config['kmin'],
+           models, dirpath_kmer=path_config['dirpath_kmer'],
+           dirpath_output=path_config['results'], kmin=kmer_config['kmin'],
            kmax=kmer_config['kmax'], verbose=verbose
        )
    elif args.model_name == 'basic_vector':
-       data_config = data_config['basic_vector']
+       path_config = path_config['basic_vector']
        vector_train_basic(
-           dirpath_vector=data_config['dirpath_vector'],
-           dirpath_output=dirpath_results, verbose=verbose
+           dirpath_vector=path_config['dirpath_vector'],
+           dirpath_output=path_config['results'], verbose=verbose
        )
 
    elif args.model_name == 'basic_onehot':
-       data_config = data_config['basic_onehot']
+       path_config = path_config['basic_onehot']
        onehot_train_basic(
-           dirpath_vector=data_config['dirpath_onehot'],
-           dirpath_output=dirpath_results, verbose=verbose
+           dirpath_vector=path_config['dirpath_onehot'],
+           dirpath_output=path_config['results'], verbose=verbose
        )
    else:
        raise ValueError('Basic ML model {} not supported'.format(args.model_name))
