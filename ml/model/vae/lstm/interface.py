@@ -289,8 +289,17 @@ def test_model(path_config, args=None):
     # print(np.unique(label).shape)
 
     # plotFigs
+    # labelslis = np.empty((label.shape[0]), dtype='str')
+    labelslis = []
+    for i in range(label.shape[0]):
+        labelslis.append(scheme[label[i]])
+        # plt.scatter(pred_new[i, 0], pred_new[i, 1],
+        #            c=scheme[labels[i]], edgecolor='k')
+
+    # plt.scatter(pred_new_ground[:, 0], pred_new_ground[:, 1],
+    #            c=labelslis, edgecolor='k')
     ax.scatter(pred_new[:, 0], pred_new[:, 1], pred_new[:, 2],
-               c=label.astype(np.float), edgecolor='k')
+               c=labelslis, edgecolor='k')
 
     ax.w_xaxis.set_ticklabels([])
     ax.w_yaxis.set_ticklabels([])
@@ -331,9 +340,15 @@ def test_model(path_config, args=None):
 
     plt.figure(figsize=(4, 3))
 
+    # labelslis = np.empty((label.shape[0]), dtype='str')
+    labelslis = []
+    for i in range(label.shape[0]):
+        labelslis.append(scheme[label[i]])
+        # plt.scatter(pred_new[i, 0], pred_new[i, 1],
+        #            c=scheme[labels[i]], edgecolor='k')
 
     plt.scatter(pred_new_ground[:, 0], pred_new_ground[:, 1],
-               c=label.astype(np.float), edgecolor='k')
+               c=labelslis, edgecolor='k')
 
 
     plt.xlabel('PC1')
