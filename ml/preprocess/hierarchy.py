@@ -13,6 +13,7 @@ ORDER_OTHER_LABELS = [
     'Oceanospirillales', 'Acidimicrobiales'
 ]
 
+
 def create_split_csv(data, labels, fpath_split):
     label_encoder = preprocessing.LabelEncoder()
     label_nos = label_encoder.fit_transform(labels)
@@ -28,6 +29,7 @@ def create_split_csv(data, labels, fpath_split):
     df_split = pd.DataFrame(data_rows)
     df_split.to_csv(fpath_split, index=False)
 
+
 def get_xy_from_df(df_taxa, level):
     ids = df_taxa['id'].values
     seqs = df_taxa['sequence'].values
@@ -36,6 +38,7 @@ def get_xy_from_df(df_taxa, level):
     y = df_taxa[level].values
 
     return X, y
+
 
 def split_data(df_taxa, level, n_samples_per_class, fpath_hierarchy):
     logger = utils.get_logger()
@@ -63,11 +66,16 @@ def split_data(df_taxa, level, n_samples_per_class, fpath_hierarchy):
         train_test_split(X, y, test_size=0.4, stratify=y, shuffle=True)
 
     (test_data, val_data, test_labels, val_labels) = \
-        train_test_split(testval_data, testval_labels, test_size=0.5, stratify=testval_labels, shuffle=True)
+        train_test_split(testval_data, testval_labels,
+                         test_size=0.5, stratify=testval_labels, shuffle=True)
 
-    create_split_csv(train_data, train_labels, '{}/train.csv'.format(fpath_level, level))
-    create_split_csv(test_data, test_labels, '{}/test.csv'.format(fpath_level, level))
-    create_split_csv(val_data, val_labels, '{}/val.csv'.format(fpath_level, level))
+    create_split_csv(train_data, train_labels,
+                     '{}/train.csv'.format(fpath_level, level))
+    create_split_csv(test_data, test_labels,
+                     '{}/test.csv'.format(fpath_level, level))
+    create_split_csv(val_data, val_labels,
+                     '{}/val.csv'.format(fpath_level, level))
+
 
 def group_labels(df_taxa, label_names):
     df_group = df_taxa
@@ -76,6 +84,7 @@ def group_labels(df_taxa, label_names):
     for lname in label_names:
         df_group = df_group.replace(lname, grouped_label_name)
     return df_group
+
 
 def create_hierarchy(fpath_taxa, fpath_hierarchy):
     logger = utils.get_logger()

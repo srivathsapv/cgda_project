@@ -38,14 +38,15 @@ def plot_train_eval_curves(acc_train, acc_test, loss_train, loss_test, save_path
 def get_items_to_plot(model):
     acc_train, acc_test, loss_train, loss_test, configs = list(zip(*model))
 
-    get_final = lambda x: list(zip(*x))[-1]
+    def get_final(x): return list(zip(*x))[-1]
 
     train_accuracies = get_final(acc_train)
     test_accuracies = get_final(acc_test)
     train_losses = get_final(loss_train)
     test_losses = get_final(loss_test)
 
-    learning_rates, weight_decays = list(zip(*[(config["lr"], config["weight_decay"]) for config in configs]))
+    learning_rates, weight_decays = list(
+        zip(*[(config["lr"], config["weight_decay"]) for config in configs]))
 
     return train_accuracies, test_accuracies, train_losses, test_losses, learning_rates, weight_decays
 
@@ -64,15 +65,18 @@ def remove_outliers(data, others, m=2, n=10):
 
 
 def plot_performance_metric(metric, learning_rates, weight_decays, z_label, title, path_config, clip_outliers=False):
-    param_to_id = {n: float(i) for i, n in enumerate(np.geomspace(1e-6, 1e3, num=10))}
+    param_to_id = {n: float(i) for i, n in enumerate(
+        np.geomspace(1e-6, 1e3, num=10))}
 
     fig = plt.figure(figsize=(14, 10))
     ax = fig.gca(projection='3d')
 
-    X, Y = [param_to_id[l] for l in learning_rates], [param_to_id[w] for w in weight_decays]
+    X, Y = [param_to_id[l] for l in learning_rates], [param_to_id[w]
+                                                      for w in weight_decays]
 
     if clip_outliers:
-        metric, (X, Y) = remove_outliers(np.array(metric), others=[np.array(X), np.array(Y)])
+        metric, (X, Y) = remove_outliers(
+            np.array(metric), others=[np.array(X), np.array(Y)])
 
     # # changes for plot_surface()
     # params_to_metric = {(param_to_id[l], param_to_id[w]): m for m, l, w in zip(metric, learning_rates, weight_decays)}
@@ -82,7 +86,8 @@ def plot_performance_metric(metric, learning_rates, weight_decays, z_label, titl
 
     ax.plot_trisurf(X, Y, metric, cmap='viridis', edgecolor='none')
 
-    ax.set_title(title + " (" + z_label + ")", fontsize=15, pad=15, weight='bold')
+    ax.set_title(title + " (" + z_label + ")",
+                 fontsize=15, pad=15, weight='bold')
     ax.tick_params(labelsize=13)
 
     ax.xaxis.set_ticks(np.arange(10))
@@ -97,13 +102,16 @@ def plot_performance_metric(metric, learning_rates, weight_decays, z_label, titl
 
     level = title.split("-")[0].lower()
     if not os.path.exists(os.path.join(path_config["grid_search_path"], "search_3d_plots", level)):
-        os.makedirs(os.path.join(path_config["grid_search_path"], "search_3d_plots", level))
+        os.makedirs(os.path.join(
+            path_config["grid_search_path"], "search_3d_plots", level))
 
-    plt.savefig(os.path.join(path_config["grid_search_path"], "search_3d_plots", level, level + "_classifier_" + "_".join([str(i).lower() for i in z_label.split()]) + ".jpg"))
+    plt.savefig(os.path.join(path_config["grid_search_path"], "search_3d_plots", level,
+                             level + "_classifier_" + "_".join([str(i).lower() for i in z_label.split()]) + ".jpg"))
 
 
 def segregate_models(experiment_logs):
-    phylum_model, class_model, order_model = [[i for i in experiment_logs if i[4]["model"] == x] for x in [0, 1, 2]]
+    phylum_model, class_model, order_model = [
+        [i for i in experiment_logs if i[4]["model"] == x] for x in [0, 1, 2]]
 
     # sort based on best test accuracy
     phylum_model = sorted(phylum_model, key=lambda x: x[1][-1], reverse=True)
@@ -114,16 +122,23 @@ def segregate_models(experiment_logs):
 
 
 def plot_grid_search_plots(model, title, path_config):
-    train_accuracies, test_accuracies, train_losses, test_losses, learning_rates, weight_decays = get_items_to_plot(model)
-    plot_performance_metric(train_accuracies, learning_rates, weight_decays, z_label="Train Accuracy", title=title + "-level CNN Classifier", path_config=path_config)
-    plot_performance_metric(test_accuracies, learning_rates, weight_decays, z_label="Validation Accuracy", title=title + "-level CNN Classifier", path_config=path_config)
-    plot_performance_metric(train_losses, learning_rates, weight_decays, clip_outliers=True, z_label="Train Loss", title=title + "-level CNN Classifier", path_config=path_config)
-    plot_performance_metric(test_losses, learning_rates, weight_decays, clip_outliers=True, z_label="Validation Loss", title=title + "-level CNN Classifier", path_config=path_config)
+    train_accuracies, test_accuracies, train_losses, test_losses, learning_rates, weight_decays = get_items_to_plot(
+        model)
+    plot_performance_metric(train_accuracies, learning_rates, weight_decays,
+                            z_label="Train Accuracy", title=title + "-level CNN Classifier", path_config=path_config)
+    plot_performance_metric(test_accuracies, learning_rates, weight_decays,
+                            z_label="Validation Accuracy", title=title + "-level CNN Classifier", path_config=path_config)
+    plot_performance_metric(train_losses, learning_rates, weight_decays, clip_outliers=True,
+                            z_label="Train Loss", title=title + "-level CNN Classifier", path_config=path_config)
+    plot_performance_metric(test_losses, learning_rates, weight_decays, clip_outliers=True,
+                            z_label="Validation Loss", title=title + "-level CNN Classifier", path_config=path_config)
 
 
 def plot_grid_search(path_config):
-    LOGGER.info("Using precomputed grid search results to plot all 3d-plots of the search space into the path_config['grid_search_results'] ...")
-    experiment_logs = np.load(os.path.join(path_config["grid_search_path"], "grid_search_best_cnn_logs.npy"))
+    LOGGER.info(
+        "Using precomputed grid search results to plot all 3d-plots of the search space into the path_config['grid_search_results'] ...")
+    experiment_logs = np.load(os.path.join(
+        path_config["grid_search_path"], "grid_search_best_cnn_logs.npy"))
 
     models = segregate_models(experiment_logs)
     for level, model in zip(["Phylum", "Class", "Order"], models):

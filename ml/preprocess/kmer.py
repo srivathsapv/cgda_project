@@ -6,6 +6,7 @@ from tqdm import tqdm
 
 import ml.utils as utils
 
+
 def get_kmer_dict(seq, k=3):
     bases = ['A', 'C', 'G', 'T']
     kmers = [''.join(p) for p in itertools.product(bases, repeat=k)]
@@ -16,6 +17,7 @@ def get_kmer_dict(seq, k=3):
         kmer_counts[kgram] += 1
 
     return kmer_counts
+
 
 def kmerize_data(fpath_csv, fpath_kmer_csv, k=3):
     df_data = pd.read_csv(fpath_csv)
@@ -28,7 +30,7 @@ def kmerize_data(fpath_csv, fpath_kmer_csv, k=3):
 
         maxval = max(list(kmers.values()))
 
-        kmers_norm = {k: v/maxval for k,v in kmers.items()}
+        kmers_norm = {k: v/maxval for k, v in kmers.items()}
 
         fdict = {**fdict, **kmers_norm}
         if 'label' in row:
@@ -47,7 +49,8 @@ def kmerize_data(fpath_csv, fpath_kmer_csv, k=3):
             df_kmers = pd.DataFrame(features)
             mode = 'a' if idx != 5000 else 'w'
             header = (idx == 5000)
-            df_kmers.to_csv(fpath_kmer_csv, index=None, mode=mode, header=header)
+            df_kmers.to_csv(fpath_kmer_csv, index=None,
+                            mode=mode, header=header)
             features = []
 
     if len(features) > 0:
@@ -55,6 +58,7 @@ def kmerize_data(fpath_csv, fpath_kmer_csv, k=3):
         mode = 'a' if fwrite_started else 'w'
         header = (not fwrite_started)
         df_kmers.to_csv(fpath_kmer_csv, index=None, mode=mode, header=header)
+
 
 def generate_kmers(fpath_hierarchy, fpath_kmer):
     logger = utils.get_logger()
@@ -69,13 +73,15 @@ def generate_kmers(fpath_hierarchy, fpath_kmer):
         for k in range(1, 7):
             logger.info('K={}'.format(k))
             kmerize_data(
-                '{hie}/{level}/train.csv'.format(hie=fpath_hierarchy, level=level),
+                '{hie}/{level}/train.csv'.format(
+                    hie=fpath_hierarchy, level=level),
                 '{fpath}/train_{k}mer.csv'.format(
                     fpath=fpath_level, k=k
                 ), k)
 
             kmerize_data(
-                '{hie}/{level}/val.csv'.format(hie=fpath_hierarchy, level=level),
+                '{hie}/{level}/val.csv'.format(hie=fpath_hierarchy,
+                                               level=level),
                 '{fpath}/val_{k}mer.csv'.format(
                     fpath=fpath_level, level=level, k=k
                 ), k)

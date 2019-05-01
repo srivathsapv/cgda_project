@@ -1,6 +1,7 @@
 from math import floor
 import json
 
+
 class Parameters:
     def __init__(self, vocab_size, feature_type):
 
@@ -13,4 +14,5 @@ class Parameters:
         self.decoder_rnn_num_layers = 1
 
         fpath_params = 'config/hybrid_vae_kernel_params.json'
-        self.kernel_params = json.loads(open(fpath_params, 'r').read())[feature_type]
+        self.kernel_params = json.loads(
+            open(fpath_params, 'r').read())[feature_type]
