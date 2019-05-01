@@ -2,6 +2,7 @@ from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
 
 from ml.model.basic.kmer import train_basic as kmer_train_basic
+from ml.model.basic.kmer import plot_kmer_metrics
 from ml.model.basic.vectorized import train_basic as vector_train_basic
 from ml.model.basic.onehot import train_basic as onehot_train_basic
 import ml.utils as utils
@@ -37,6 +38,17 @@ def train_model(path_config, args=None):
             dirpath_vector=path_config['dirpath_onehot'],
             dirpath_output=path_config['results']
         )
+    else:
+        raise ValueError(
+            'Basic ML model {} not supported'.format(args.model_name))
+
+def test_model(path_config, args=None):
+    if args.model_name == 'basic_kmer':
+        plot_kmer_metrics(path_config, args)
+    elif args.model_name == 'basic_vector':
+        pass
+    elif args.model_name == 'basic_onehot':
+        pass
     else:
         raise ValueError(
             'Basic ML model {} not supported'.format(args.model_name))
