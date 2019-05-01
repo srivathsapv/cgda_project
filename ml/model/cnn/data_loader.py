@@ -7,7 +7,6 @@ import pandas as pd
 import torch
 import torch.utils.data as torch_utils
 
-import ml.utils as utils
 from ml.utils import get_logger
 
 plt.style.use('seaborn')
@@ -15,7 +14,7 @@ plt.style.use('seaborn')
 warnings.filterwarnings("ignore")
 torch.set_num_threads(1)
 
-LOGGER = get_logger(None)
+LOGGER = get_logger()
 
 
 def read_data_from_csv(path):

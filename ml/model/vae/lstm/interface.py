@@ -20,10 +20,10 @@ from mpl_toolkits.mplot3d import Axes3D
 import ml.utils as utils
 RUN_OPTIONS = ["lstm_vae_ordinal", "lstm_vae_kmer_4", "lstm_vae_kmer_5"]
 
-def create_lstm_vae(input_dim, 
-    timesteps, 
-    batch_size, 
-    intermediate_dim, 
+def create_lstm_vae(input_dim,
+    timesteps,
+    batch_size,
+    intermediate_dim,
     latent_dim,
     epsilon_std=1.):
 
@@ -35,7 +35,7 @@ def create_lstm_vae(input_dim,
     # VAE Z layer
     z_mean = Dense(latent_dim)(h)
     z_log_sigma = Dense(latent_dim)(h)
-    
+
     def sampling(args):
         z_mean, z_log_sigma = args
         epsilon = K.random_normal(shape=(batch_size, latent_dim),
@@ -43,7 +43,7 @@ def create_lstm_vae(input_dim,
         return z_mean + K.exp(z_log_sigma/2.0) * epsilon
 
     z = Lambda(sampling, output_shape=(latent_dim,))([z_mean, z_log_sigma])
-    
+
     # decoded LSTM layer
     decoder_h = LSTM(intermediate_dim, return_sequences=True)
     decoder_mean = LSTM(input_dim, return_sequences=True)
@@ -53,7 +53,7 @@ def create_lstm_vae(input_dim,
 
     # decoded layer
     x_decoded_mean = decoder_mean(h_decoded)
-    
+
     # end-to-end autoencoder
     vae = Model(x, x_decoded_mean)
 
@@ -68,7 +68,7 @@ def create_lstm_vae(input_dim,
 
     _x_decoded_mean = decoder_mean(_h_decoded)
     generator = Model(decoder_input, _x_decoded_mean)
-    
+
     def vae_loss(x, x_decoded_mean):
         xent_loss = objectives.mse(x, x_decoded_mean)
         kl_loss = - 0.5 * K.mean(1 + z_log_sigma - K.square(z_mean) - K.exp(z_log_sigma))
@@ -76,7 +76,7 @@ def create_lstm_vae(input_dim,
         return loss
 
     vae.compile(optimizer='rmsprop', loss=vae_loss)
-    
+
     return vae, encoder, generator
 
 def string_to_array(my_string):
@@ -107,12 +107,12 @@ def get_data1(path, args):
         for item in x_train[1:]:
           arr.append(item.split(',')[:-4])
 #       arr.append(item.split(",")[3])
-      
+
     maxi = 0
     for item in arr:
       if len(item)>maxi:
         maxi = len(item)
-        
+
     data = np.empty((x_train.shape[0]-1, maxi))
     count = 0
     for item in arr:
@@ -125,8 +125,8 @@ def get_data1(path, args):
         x = data[i:(i+timesteps), :]
         dataX.append(x)
     return np.array(dataX)
-  
-  
+
+
 def get_data2(path, args):
     x_train = np.transpose(np.genfromtxt(path,delimiter='\n',dtype=None,encoding=None))
 
@@ -138,12 +138,12 @@ def get_data2(path, args):
         arr = []
         for item in x_train[1:]:
           arr.append(item.split(',')[:-2])
-      
+
     maxi = 0
     for item in arr:
       if len(item)>maxi:
         maxi = len(item)
-        
+
     data = np.empty((x_train.shape[0]-1, maxi))
     count = 0
     for item in arr:
@@ -157,20 +157,20 @@ def get_data2(path, args):
         dataX.append(x)
     return np.array(dataX)
 
-def train_model(path_config, verbose=True, args=None):
+def train_model(path_config, args=None):
     x = get_data1(path_config[args.model_name]['train'], args)
     x_test = get_data2(path_config[args.model_name]['test'], args)
     hyperparams = utils.get_model_hyperparams('lstm_vae')
     dirpath_results = path_config[args.model_name]['results']
-    logger = utils.get_logger(verbose)
+    logger = utils.get_logger()
     logger.info((x.shape, x_test.shape))
     input_dim = x.shape[-1] # 13
     timesteps = x.shape[1] # 3
     # batch_size = 1
 
-    vae, enc, gen = create_lstm_vae(input_dim, 
+    vae, enc, gen = create_lstm_vae(input_dim,
         timesteps,
-        hyperparams['batch_size'], 
+        hyperparams['batch_size'],
         hyperparams['intermediate_dim'],
         hyperparams['latent_dim'],
         hyperparams['epsilon_std'])

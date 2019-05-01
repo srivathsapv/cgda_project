@@ -28,8 +28,8 @@ def train_kmer_combined(model, level, train_data, train_labels, val_data, val_la
 
     return float(f1), pred_val
 
-def train_basic(models, dirpath_kmer, dirpath_output, kmin, kmax, verbose=True):
-    logger = utils.get_logger(verbose)
+def train_basic(models, dirpath_kmer, dirpath_output, kmin, kmax):
+    logger = utils.get_logger()
 
     for model in models:
         model_str = type(model).__name__.lower()

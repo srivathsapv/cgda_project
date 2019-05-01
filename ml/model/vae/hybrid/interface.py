@@ -14,14 +14,14 @@ from ml.model.vae.hybrid.vae import VAE
 
 RUN_OPTIONS = ["hybrid_vae_ordinal", "hybrid_vae_kmer_4", "hybrid_vae_kmer_5"]
 
-def train_model(path_config, verbose=True, args=None):
+def train_model(path_config, args=None):
     feature_type = args.model_name.replace('hybrid_vae_', '')
     hyperparams = utils.get_model_hyperparams('hybrid_vae')
 
     if args.is_demo:
         hyperparams['num_iterations'] = 1
 
-    logger = utils.get_logger(verbose)
+    logger = utils.get_logger()
 
     t.cuda.empty_cache()
 

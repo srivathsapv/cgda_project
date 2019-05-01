@@ -18,7 +18,7 @@ from ml.utils import get_logger
 warnings.filterwarnings("ignore")
 torch.set_num_threads(1)
 
-LOGGER = get_logger(None)
+LOGGER = get_logger()
 
 
 def cnn_train_model(model, train_loader, test_loader, optimizer, config):

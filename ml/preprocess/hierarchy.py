@@ -38,7 +38,7 @@ def get_xy_from_df(df_taxa, level):
     return X, y
 
 def split_data(df_taxa, level, n_samples_per_class, fpath_hierarchy):
-    logger = utils.get_logger(True)
+    logger = utils.get_logger()
     fpath_level = os.path.join(fpath_hierarchy, level)
 
     if not os.path.exists(fpath_level):
@@ -78,7 +78,7 @@ def group_labels(df_taxa, label_names):
     return df_group
 
 def create_hierarchy(fpath_taxa, fpath_hierarchy):
-    logger = utils.get_logger(True)
+    logger = utils.get_logger()
     logger.info('Creating hierarchy files from taxa.csv')
     if not os.path.exists(fpath_hierarchy):
         os.makedirs(fpath_hierarchy)

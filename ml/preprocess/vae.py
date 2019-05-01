@@ -7,7 +7,7 @@ from ml.preprocess.kmer import kmerize_data
 import ml.utils as utils
 
 def generate_kmers(fpath_embeds, dirpath_vae, k):
-    logger = utils.get_logger(True)
+    logger = utils.get_logger()
     logger.info('Generating {}-mers for VAE'.format(k))
 
     fpath_embed_kmer = '{}/embeds_{}mer.csv'.format(dirpath_vae, k)
@@ -18,7 +18,7 @@ def generate_kmers(fpath_embeds, dirpath_vae, k):
     np.save('{}/features_{}mer.npy'.format(dirpath_vae, k), data_kmer)
 
 def generate_vae_data(fpath_embeds, dirpath_vae):
-    logger = utils.get_logger(True)
+    logger = utils.get_logger()
     logger.info('Generating data files for VAE training')
     if not os.path.exists(dirpath_vae):
         os.makedirs(dirpath_vae)

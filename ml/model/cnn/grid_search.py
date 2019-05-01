@@ -14,7 +14,7 @@ from ml.utils import get_logger
 warnings.filterwarnings("ignore")
 torch.set_num_threads(1)
 
-LOGGER = get_logger(None)
+LOGGER = get_logger()
 
 
 def generate_search_space_configurations(path_config):

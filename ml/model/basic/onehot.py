@@ -47,8 +47,8 @@ def ordinal_encoder(my_array):
     		data.append([0,0,0,0,1])
     return data
 
-def train_basic(dirpath_vector, dirpath_output, verbose=True):
-	logger = utils.get_logger(verbose)
+def train_basic(dirpath_vector, dirpath_output):
+	logger = utils.get_logger()
 	x_train = np.genfromtxt(dirpath_vector + '/phylum/train.csv',delimiter='\n',dtype=None,encoding=None)
 	x_test = np.genfromtxt(dirpath_vector + '/phylum/test.csv',delimiter='\n',dtype=None,encoding=None)
 	x_val = np.genfromtxt(dirpath_vector + '/phylum/val.csv',delimiter='\n',dtype=None,encoding=None)
@@ -164,7 +164,7 @@ def train_basic(dirpath_vector, dirpath_output, verbose=True):
 	count = 0
 	for item in arr2:
 		final3[count][:len(item)] = item
-		count+=1	
+		count+=1
 
 	hf = h5py.File(dirpath_vector + '/class/ordinal.h5', 'w')
 
@@ -245,7 +245,7 @@ def train_basic(dirpath_vector, dirpath_output, verbose=True):
 	scores = clf2.decision_function(newX)
 	scores2 = clf.predict(newX)
 
-	score = np.amax(scores, axis = 1) 
+	score = np.amax(scores, axis = 1)
 
 	fpr, tpr, thresholds = roc_curve(label, score, pos_label=2)
 	fpr2, tpr2, thresholds2 = roc_curve(label, scores2, pos_label=2)
@@ -323,7 +323,7 @@ def train_basic(dirpath_vector, dirpath_output, verbose=True):
 	np.save(dirpath_output + 'SVM_class_predictions', preds2_test)
 	np.save(dirpath_output + 'RF_class_predictions', preds_test)
 
-	score = np.amax(scores1, axis = 1) 
+	score = np.amax(scores1, axis = 1)
 
 	fpr, tpr, thresholds = roc_curve(label, scores, pos_label=2)
 	fpr2, tpr2, thresholds2 = roc_curve(label, score, pos_label=2)

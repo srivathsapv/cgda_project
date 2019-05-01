@@ -57,7 +57,7 @@ def kmerize_data(fpath_csv, fpath_kmer_csv, k=3):
         df_kmers.to_csv(fpath_kmer_csv, index=None, mode=mode, header=header)
 
 def generate_kmers(fpath_hierarchy, fpath_kmer):
-    logger = utils.get_logger(True)
+    logger = utils.get_logger()
     for level in ['phylum', 'class', 'order']:
         logger.info('Generating K-Mers for {}'.format(level))
 

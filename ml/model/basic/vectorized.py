@@ -41,7 +41,7 @@ def ordinal_encoder(my_array):
     return float_encoded
 
 def train_basic(dirpath_vector, dirpath_output, verbose=True):
-	logger = utils.get_logger(verbose)
+	logger = utils.get_logger()
 	x_train = np.genfromtxt(dirpath_vector + '/phylum/train.csv',delimiter='\n',dtype=None,encoding=None)
 	x_test = np.genfromtxt(dirpath_vector + '/phylum/test.csv',delimiter='\n',dtype=None,encoding=None)
 	x_val = np.genfromtxt(dirpath_vector + '/phylum/val.csv',delimiter='\n',dtype=None,encoding=None)

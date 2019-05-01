@@ -11,7 +11,7 @@ plt.style.use('seaborn')
 
 warnings.filterwarnings("ignore")
 
-LOGGER = get_logger(None)
+LOGGER = get_logger()
 
 
 def plot_train_eval_curves(acc_train, acc_test, loss_train, loss_test, save_path):

@@ -14,8 +14,6 @@ if __name__ == '__main__':
     dirpath_vae = 'data/vae'
     dirpath_cnn = 'data/cnn'
 
-    utils.init_logger(True)
-
     create_hierarchy(fpath_taxa, fpath_hierarchy)
     generate_kmers(fpath_hierarchy, fpath_kmer)
     generate_vae_data(fpath_embeds, dirpath_vae)

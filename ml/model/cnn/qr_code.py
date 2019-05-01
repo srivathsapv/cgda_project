@@ -13,7 +13,7 @@ plt.style.use('seaborn')
 warnings.filterwarnings("ignore")
 torch.set_num_threads(1)
 
-LOGGER = get_logger(None)
+LOGGER = get_logger()
 
 IMAGE_WIDTH = IMAGE_HEIGHT = 21  # 441 length zero-padded DNA sequences
 IMAGE_CHANNELS = 4  # A, C, G, T
