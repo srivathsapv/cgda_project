@@ -3,11 +3,12 @@ import time
 import warnings
 
 import numpy as np
-from tqdm import tqdm
 import torch
 import torch.backends.cudnn as cudnn
 import torch.nn.functional as F
 from torch.autograd import Variable
+from torchviz import make_dot
+from tqdm import tqdm
 
 from ml.model.cnn.architecture import ConvNet
 from ml.model.cnn.data_loader import (create_pytorch_datasets,
@@ -128,24 +129,39 @@ def cnn_train_eval(level, model, path_config, eval_on="test", cnn_config={
     return output
 
 
+def plot_archs(path_config):
+    # Print the CNN architecture
+    models = [ConvNet(3), ConvNet(5), ConvNet(10)]
+
+    for model, level in zip(models, ["phylum", "class", "order"]):
+        x = torch.zeros(1, 4, 21, 21, dtype=torch.float, requires_grad=True)
+        out = model(x)
+        dot = make_dot(out, params=dict(list(model.named_parameters()) + [('Input Image', x)]))
+
+        dot.format = 'png'
+        dot.render(os.path.join(path_config["models_path"], level+"_model_cnn_arch"))
+
+
 def train_best_cnn_models(cnn_config, path_config,
                           is_demo=False, save_model=True, is_plot=True):
+    LOGGER.info("Visualizations of the CNN architectures have been saved to: path_config['models_path']\n")
+    plot_archs(path_config)
+
     LOGGER.info(
-        "Training with the best possible params and evaluating on validation and test datasets ...")
+        "Training with the best possible params and evaluating on validation and test datasets ...\n")
 
     LOGGER.info("NOTE: The best possible parameters were found using the grid_search.py script file." +
                 " This tests 300 different settings and ran on a 40 core machine for 2 hours." +
                 " To see the grid search 3D plots over weight_decay and learning_rate," +
-                " go to path_config['grid_search_results'].")
+                " go to path_config['grid_search_results'].\n")
 
     LOGGER.info(
-        "NOTE: Run grid_search.py if you want to run the grid search from scratch.")
-
+        "NOTE: Run grid_search.py if you want to run the grid search from scratch.\n")
     plot_grid_search(path_config)
 
     if is_demo:
         LOGGER.info(
-            "WARNING: Runnning in DEMO mode. (Only 2 epochs will be run and the trained model will not be saved)")
+            "WARNING: Runnning in DEMO mode. (Only 2 epochs will be run and the trained model will not be saved)\n")
         for level in ["phylum", "class", "order"]:
             cnn_config[level]["epoch"] = 2
         save_model = False

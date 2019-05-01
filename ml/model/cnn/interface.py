@@ -1,5 +1,6 @@
 import torch
 from ml.model.cnn.train_eval import train_best_cnn_models
+from ml.model.cnn.test import cnn_test_all_models
 import ml.utils as utils
 
 RUN_OPTIONS = ["cnn_qrcode"]
@@ -15,3 +16,8 @@ def train_model(path_config, args):
         cnn_config[level]["device"] = DEVICE
 
     train_best_cnn_models(cnn_config, path_config, is_demo=args.is_demo)
+
+
+def test_model(path_config, args):
+    path_config = path_config["cnn_qrcode"]
+    cnn_test_all_models(path_config)

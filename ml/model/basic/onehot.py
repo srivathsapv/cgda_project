@@ -243,8 +243,8 @@ def train_basic(dirpath_vector, dirpath_output):
 
     preds2_test = clf2.predict(newY)
     preds_test = clf.predict(newY)
-    np.save(dirpath_output + 'SVM_phylum_predictions', preds2_test)
-    np.save(dirpath_output + 'RF_phylum_predictions', preds_test)
+    np.save(dirpath_output + '/SVM_phylum_predictions', preds2_test)
+    np.save(dirpath_output + '/RF_phylum_predictions', preds_test)
 
     scores = clf2.decision_function(newX)
     scores2 = clf.predict(newX)
@@ -330,8 +330,8 @@ def train_basic(dirpath_vector, dirpath_output):
     preds2_test = clf2.predict(newY)
     preds_test = clf.predict(newY)
 
-    np.save(dirpath_output + 'SVM_class_predictions', preds2_test)
-    np.save(dirpath_output + 'RF_class_predictions', preds_test)
+    np.save(dirpath_output + '/SVM_class_predictions', preds2_test)
+    np.save(dirpath_output + '/RF_class_predictions', preds_test)
 
     score = np.amax(scores1, axis=1)
 
