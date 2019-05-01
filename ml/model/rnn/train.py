@@ -153,4 +153,4 @@ def write_metrics(metrics, metrics_file):
 
     with open(metrics_file, 'w') as fout:
         for m in metrics:
-            print(m[0], m[1], m[2], m[4], sep='\t', file=fout)
+            print(m[0], m[1], m[2], m[3], sep='\t', file=fout)
