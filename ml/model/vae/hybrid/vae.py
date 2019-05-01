@@ -8,6 +8,7 @@ from torch.nn.init import xavier_normal
 from ml.model.vae.hybrid.encoder import Encoder
 from ml.model.vae.hybrid.decoder import Decoder
 
+
 class VAE(nn.Module):
     def __init__(self, params):
         super(VAE, self).__init__()
@@ -19,7 +20,8 @@ class VAE(nn.Module):
         self.embed = nn.Embedding(self.vocab_size, self.embed_size)
         self.embed.weight = xavier_normal(self.embed.weight)
 
-        self.encoder = Encoder(self.embed_size, self.latent_size, params.kernel_params['encoder'])
+        self.encoder = Encoder(
+            self.embed_size, self.latent_size, params.kernel_params['encoder'])
 
         self.context_to_mu = nn.Linear(self.latent_size, self.latent_size)
         self.context_to_logvar = nn.Linear(self.latent_size, self.latent_size)
@@ -56,7 +58,8 @@ class VAE(nn.Module):
             z = z * std + mu
             z = F.dropout(z, drop_prob, training=True)
 
-            kld = (-0.5 * t.sum(logvar - t.pow(mu, 2) - t.exp(logvar) + 1, 1)).mean()
+            kld = (-0.5 * t.sum(logvar - t.pow(mu, 2) -
+                                t.exp(logvar) + 1, 1)).mean()
         else:
             kld = None
         decoder_input = self.embed(decoder_input)

@@ -1,5 +1,6 @@
 import datetime
 
+
 class ToggleLogger(object):
     def __init__(self, date_format, enabled=True):
         self.date_format = date_format

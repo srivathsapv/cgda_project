@@ -33,10 +33,13 @@ def read_data_from_csv(path):
 
 
 def load_train_val_test_data(level, analyze=True):
-    data_base_path = "./hierarchy/" + level
-    train_sequences, train_labels = read_data_from_csv(os.path.join(data_base_path, "train.csv"))
-    val_sequences, val_labels = read_data_from_csv(os.path.join(data_base_path, "val.csv"))
-    test_sequences, test_labels = read_data_from_csv(os.path.join(data_base_path, "test.csv"))
+    data_base_path = "./data/hierarchy/" + level
+    train_sequences, train_labels = read_data_from_csv(
+        os.path.join(data_base_path, "train.csv"))
+    val_sequences, val_labels = read_data_from_csv(
+        os.path.join(data_base_path, "val.csv"))
+    test_sequences, test_labels = read_data_from_csv(
+        os.path.join(data_base_path, "test.csv"))
 
     if analyze:
         a = list(map(lambda x: len(x), train_sequences))
@@ -63,7 +66,8 @@ base_pair_map = {
 
 
 def seqeunces_to_image(sequences):
-    image = np.zeros((len(sequences), IMAGE_WIDTH, IMAGE_HEIGHT, IMAGE_CHANNELS))
+    image = np.zeros((len(sequences), IMAGE_WIDTH,
+                      IMAGE_HEIGHT, IMAGE_CHANNELS))
     for i, sequence in enumerate(sequences):
         for loc, base_pair in enumerate(sequence):
             row = loc // IMAGE_HEIGHT
@@ -99,7 +103,8 @@ def create_pytorch_datasets(data, labels):
     tensor_y = torch.stack([torch.Tensor([i]) for i in labels]).long().view(-1)
 
     dataset = utils.TensorDataset(tensor_x, tensor_y)  # create your datset
-    dataloader = utils.DataLoader(dataset, batch_size=BATCH_SIZE)  # create your dataloader
+    dataloader = utils.DataLoader(
+        dataset, batch_size=BATCH_SIZE)  # create your dataloader
 
     return dataloader
 
@@ -117,7 +122,7 @@ class ConvNet(nn.Module):
             nn.BatchNorm2d(32),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2, stride=2))
-        self.fc = nn.Linear(5*5*32, num_classes)
+        self.fc = nn.Linear(5 * 5 * 32, num_classes)
 
     def forward(self, x):
         out = self.layer1(x)
@@ -166,7 +171,8 @@ def cnn_train_model(model, train_loader, test_loader, optimizer, EPOCH):
             correct += pred.eq(b_y.data.view_as(pred)).long().cpu().sum()
             train_loss += F.nll_loss(scores, b_y, reduction='sum').item()
 
-        acc_train[epoch] = 100 * float(correct) / float(len(train_loader.dataset))
+        acc_train[epoch] = 100 * \
+            float(correct) / float(len(train_loader.dataset))
         loss_train[epoch] = train_loss / len(train_loader.dataset)
 
         # testing
@@ -182,22 +188,27 @@ def cnn_train_model(model, train_loader, test_loader, optimizer, EPOCH):
             pred = scores.data.max(1, keepdim=True)[1]
             correct += pred.eq(b_y.data.view_as(pred)).long().cpu().sum()
 
-        loss_test[epoch] = test_loss/len(test_loader.dataset)
-        acc_test[epoch] = 100 * float(correct) / float(len(test_loader.dataset))
+        loss_test[epoch] = test_loss / len(test_loader.dataset)
+        acc_test[epoch] = 100 * float(correct) / \
+            float(len(test_loader.dataset))
         time_test[epoch] = time.perf_counter() - t0
 
     return [acc_train, acc_test, loss_train, loss_test]
 
 
-def cnn_train_eval(level, model, eval_on="test", cnn_config={"lr": 0.001, "weight_decay": 0}):
+def cnn_train_eval(level, model, eval_on="test", cnn_config={
+                   "lr": 0.001, "weight_decay": 0}):
     # load train-test data and convert to a PyTorch Dataset of QRCode images
     train_sequences, train_labels, val_sequences, val_labels, test_sequences, test_labels = load_train_val_test_data(
         level, analyze=False)
-    train_loader = create_pytorch_datasets(seqeunces_to_image(train_sequences), train_labels)
+    train_loader = create_pytorch_datasets(
+        seqeunces_to_image(train_sequences), train_labels)
     if eval_on == "test":
-        eval_loader = create_pytorch_datasets(seqeunces_to_image(test_sequences), test_labels)
+        eval_loader = create_pytorch_datasets(
+            seqeunces_to_image(test_sequences), test_labels)
     elif eval_on == "val":
-        eval_loader = create_pytorch_datasets(seqeunces_to_image(val_sequences), val_labels)
+        eval_loader = create_pytorch_datasets(
+            seqeunces_to_image(val_sequences), val_labels)
 
     optimizer = torch.optim.Adam(
         model.parameters(), lr=cnn_config["lr"], weight_decay=cnn_config["weight_decay"])
@@ -209,7 +220,8 @@ def cnn_train_eval(level, model, eval_on="test", cnn_config={"lr": 0.001, "weigh
     return output
 
 
-levels_and_models = [("phylum", ConvNet(3)), ("class", ConvNet(5)), ("order", ConvNet(10))]
+levels_and_models = [("phylum", ConvNet(3)),
+                     ("class", ConvNet(5)), ("order", ConvNet(10))]
 lr_space = np.geomspace(1e-6, 1e3, num=10)
 weight_decay = np.geomspace(1e-6, 1e3, num=10)
 
