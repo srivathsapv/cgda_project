@@ -76,7 +76,7 @@ def train_basic(dirpath_vector, dirpath_output):
         if len(item) > maxi:
             maxi = len(item)
 
-    final1 = np.zeros((x_train.shape[0]-1, maxi, 5))
+    final1 = np.zeros((x_train.shape[0] - 1, maxi, 5))
 
     count = 0
     for item in arr:
@@ -88,7 +88,7 @@ def train_basic(dirpath_vector, dirpath_output):
         if len(item) > maxi1:
             maxi1 = len(item)
 
-    final2 = np.zeros((x_test.shape[0]-1, maxi1, 5))
+    final2 = np.zeros((x_test.shape[0] - 1, maxi1, 5))
 
     count = 0
     for item in arr1:
@@ -100,7 +100,7 @@ def train_basic(dirpath_vector, dirpath_output):
         if len(item) > maxi2:
             maxi2 = len(item)
 
-    final3 = np.zeros((x_val.shape[0]-1, maxi2, 5))
+    final3 = np.zeros((x_val.shape[0] - 1, maxi2, 5))
 
     count = 0
     for item in arr2:
@@ -139,7 +139,7 @@ def train_basic(dirpath_vector, dirpath_output):
         if len(item) > maxi:
             maxi = len(item)
 
-    final1 = np.zeros((x_train.shape[0]-1, maxi, 5))
+    final1 = np.zeros((x_train.shape[0] - 1, maxi, 5))
 
     count = 0
     for item in arr:
@@ -151,7 +151,7 @@ def train_basic(dirpath_vector, dirpath_output):
         if len(item) > maxi1:
             maxi1 = len(item)
 
-    final2 = np.zeros((x_test.shape[0]-1, maxi1, 5))
+    final2 = np.zeros((x_test.shape[0] - 1, maxi1, 5))
 
     count = 0
     for item in arr1:
@@ -163,7 +163,7 @@ def train_basic(dirpath_vector, dirpath_output):
         if len(item) > maxi2:
             maxi2 = len(item)
 
-    final3 = np.zeros((x_val.shape[0]-1, maxi2, 5))
+    final3 = np.zeros((x_val.shape[0] - 1, maxi2, 5))
 
     count = 0
     for item in arr2:
@@ -233,8 +233,8 @@ def train_basic(dirpath_vector, dirpath_output):
     clf2 = SVC(kernel='rbf')
     clf = RandomForestClassifier()
 
-    newX = X.reshape(X.shape[0], X.shape[1]*X.shape[2])
-    newY = Y.reshape(Y.shape[0], Y.shape[1]*Y.shape[2])
+    newX = X.reshape(X.shape[0], X.shape[1] * X.shape[2])
+    newY = Y.reshape(Y.shape[0], Y.shape[1] * Y.shape[2])
     clf2.fit(newX, label)
     clf.fit(newX, label)
 
@@ -243,8 +243,8 @@ def train_basic(dirpath_vector, dirpath_output):
 
     preds2_test = clf2.predict(newY)
     preds_test = clf.predict(newY)
-    np.save(dirpath_output + 'SVM_phylum_predictions', preds2_test)
-    np.save(dirpath_output + 'RF_phylum_predictions', preds_test)
+    np.save(dirpath_output + '/SVM_phylum_predictions', preds2_test)
+    np.save(dirpath_output + '/RF_phylum_predictions', preds_test)
 
     scores = clf2.decision_function(newX)
     scores2 = clf.predict(newX)
@@ -258,7 +258,7 @@ def train_basic(dirpath_vector, dirpath_output):
     for i in range(preds2.shape[0]):
         if preds2[i] == label[i]:
             match2 += 1
-    accuracy2 = float(match2)/preds2.shape[0]
+    accuracy2 = float(match2) / preds2.shape[0]
     p, r, f1, s = precision_recall_fscore_support(
         label, preds2, average='weighted')
 
@@ -266,7 +266,7 @@ def train_basic(dirpath_vector, dirpath_output):
     for i in range(preds.shape[0]):
         if preds[i] == label[i]:
             match += 1
-    accuracy = float(match)/preds.shape[0]
+    accuracy = float(match) / preds.shape[0]
     p2, r2, f12, s = precision_recall_fscore_support(
         label, preds, average='weighted')
 
@@ -318,8 +318,8 @@ def train_basic(dirpath_vector, dirpath_output):
     clf2 = RandomForestClassifier()
     clf = SVC(kernel='rbf')
 
-    newX = X.reshape(X.shape[0], X.shape[1]*X.shape[2])
-    newY = Y.reshape(Y.shape[0], Y.shape[1]*Y.shape[2])
+    newX = X.reshape(X.shape[0], X.shape[1] * X.shape[2])
+    newY = Y.reshape(Y.shape[0], Y.shape[1] * Y.shape[2])
     clf2.fit(newX, label)
     clf.fit(newX, label)
     preds2 = clf2.predict(newX)
@@ -330,8 +330,8 @@ def train_basic(dirpath_vector, dirpath_output):
     preds2_test = clf2.predict(newY)
     preds_test = clf.predict(newY)
 
-    np.save(dirpath_output + 'SVM_class_predictions', preds2_test)
-    np.save(dirpath_output + 'RF_class_predictions', preds_test)
+    np.save(dirpath_output + '/SVM_class_predictions', preds2_test)
+    np.save(dirpath_output + '/RF_class_predictions', preds_test)
 
     score = np.amax(scores1, axis=1)
 
@@ -342,7 +342,7 @@ def train_basic(dirpath_vector, dirpath_output):
     for i in range(preds2.shape[0]):
         if preds2[i] == label[i]:
             match2 += 1
-    accuracy2 = float(match2)/preds2.shape[0]
+    accuracy2 = float(match2) / preds2.shape[0]
     p, r, f1, s = precision_recall_fscore_support(
         label, preds2, average='weighted')
     C = confusion_matrix(label, preds2)
@@ -351,7 +351,7 @@ def train_basic(dirpath_vector, dirpath_output):
     for i in range(preds.shape[0]):
         if preds[i] == label[i]:
             match += 1
-    accuracy = float(match)/preds.shape[0]
+    accuracy = float(match) / preds.shape[0]
     p2, r2, f12, s = precision_recall_fscore_support(
         label, preds, average='weighted')
 

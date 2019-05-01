@@ -40,7 +40,7 @@ def create_lstm_vae(input_dim,
         z_mean, z_log_sigma = args
         epsilon = K.random_normal(shape=(batch_size, latent_dim),
                                   mean=0., stddev=epsilon_std)
-        return z_mean + K.exp(z_log_sigma/2.0) * epsilon
+        return z_mean + K.exp(z_log_sigma / 2.0) * epsilon
 
     z = Lambda(sampling, output_shape=(latent_dim,))([z_mean, z_log_sigma])
 
@@ -102,7 +102,8 @@ def get_data1(path, args):
     # read data from file
     x_train = np.transpose(np.genfromtxt(
         path, delimiter='\n', dtype=None, encoding=None))
-#     x_test = np.transpose(np.genfromtxt(,delimiter='\n',dtype=None,encoding=None))
+# x_test =
+# np.transpose(np.genfromtxt(,delimiter='\n',dtype=None,encoding=None))
     if args.model_name == "lstm_vae_ordinal":
         arr = []
         for item in x_train[1:]:
@@ -118,7 +119,7 @@ def get_data1(path, args):
         if len(item) > maxi:
             maxi = len(item)
 
-    data = np.empty((x_train.shape[0]-1, maxi))
+    data = np.empty((x_train.shape[0] - 1, maxi))
     count = 0
     for item in arr:
         data[count][:len(item)] = item
@@ -127,7 +128,7 @@ def get_data1(path, args):
     timesteps = 1
     dataX = []
     for i in range(data.shape[0]):
-        x = data[i:(i+timesteps), :]
+        x = data[i:(i + timesteps), :]
         dataX.append(x)
     return np.array(dataX)
 
@@ -150,7 +151,7 @@ def get_data2(path, args):
         if len(item) > maxi:
             maxi = len(item)
 
-    data = np.empty((x_train.shape[0]-1, maxi))
+    data = np.empty((x_train.shape[0] - 1, maxi))
     count = 0
     for item in arr:
         data[count][:len(item)] = item
@@ -159,7 +160,7 @@ def get_data2(path, args):
     timesteps = 1
     dataX = []
     for i in range(data.shape[0]):
-        x = data[i:(i+timesteps), :]
+        x = data[i:(i + timesteps), :]
         dataX.append(x)
     return np.array(dataX)
 

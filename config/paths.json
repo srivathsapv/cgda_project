@@ -12,18 +12,18 @@
         "results": "results/vae/hybrid"
     },
     "lstm_vae_ordinal": {
-        "train": "data/lstm_vae/vector_train.csv",
-        "test": "data/lstm_vae/vector_test.csv",
-        "results": "results/vae/hybrid"
+        "train": "data/embeds.csv",
+        "test": "data/hierarchy/phylum/train.csv",
+        "results": "results/vae/lstm"
     },
     "lstm_vae_kmer_4": {
-        "train": "data/lstm_vae/kmer_4_train.csv",
-        "test": "data/lstm_vae/kmer_4_test.csv",
+        "train": "data/vae/embeds_4mer.csv",
+        "test": "data/kmer/phylum/train_4mer.csv",
         "results": "results/vae/lstm"
     },
     "lstm_vae_kmer_5": {
-        "train": "data/lstm_vae/kmer_5_train.csv",
-        "test": "data/lstm_vae/kmer_5_test.csv",
+        "train": "data/vae/embeds_5mer.csv",
+        "test": "data/kmer/phylum/train_5mer.csv",
         "results": "results/vae/lstm"
     },
     "basic_kmer": {

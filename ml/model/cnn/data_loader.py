@@ -25,7 +25,8 @@ def read_data_from_csv(path):
     return X, y, y_names
 
 
-def load_train_val_test_data(base_path, level, analyze=True, return_label_names=False):
+def load_train_val_test_data(
+        base_path, level, analyze=True, return_label_names=False):
     base_path_on_level = os.path.join(base_path, level)
     train_sequences, train_labels, train_label_names = read_data_from_csv(
         os.path.join(base_path_on_level, "train.csv"))

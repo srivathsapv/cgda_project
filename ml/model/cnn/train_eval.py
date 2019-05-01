@@ -78,7 +78,7 @@ def cnn_train_model(model, train_loader, test_loader, optimizer, config):
             pred = scores.data.max(1, keepdim=True)[1]
             correct += pred.eq(b_y.data.view_as(pred)).long().cpu().sum()
 
-        loss_test[epoch] = test_loss/len(test_loader.dataset)
+        loss_test[epoch] = test_loss / len(test_loader.dataset)
         acc_test[epoch] = 100 * float(correct) / \
             float(len(test_loader.dataset))
         time_test[epoch] = time.perf_counter() - t0
@@ -86,7 +86,8 @@ def cnn_train_model(model, train_loader, test_loader, optimizer, config):
     return [acc_train, acc_test, loss_train, loss_test, model]
 
 
-def cnn_train_eval(level, model, path_config, eval_on="test", cnn_config={"lr": 0.001, "weight_decay": 0, "epoch": 25, "batch_size": 32, "device": "cpu"}, is_plot=True, save_model=False):
+def cnn_train_eval(level, model, path_config, eval_on="test", cnn_config={
+                   "lr": 0.001, "weight_decay": 0, "epoch": 25, "batch_size": 32, "device": "cpu"}, is_plot=True, save_model=False):
     (train_images, train_labels), (val_images, val_labels), (test_images,
                                                              test_labels) = load_data_from_dump(level, path_config["input_path"])
 
@@ -127,7 +128,8 @@ def cnn_train_eval(level, model, path_config, eval_on="test", cnn_config={"lr": 
     return output
 
 
-def train_best_cnn_models(cnn_config, path_config, is_demo=False, save_model=True, is_plot=True):
+def train_best_cnn_models(cnn_config, path_config,
+                          is_demo=False, save_model=True, is_plot=True):
     LOGGER.info(
         "Training with the best possible params and evaluating on validation and test datasets ...")
 

@@ -14,7 +14,8 @@ warnings.filterwarnings("ignore")
 LOGGER = get_logger()
 
 
-def plot_train_eval_curves(acc_train, acc_test, loss_train, loss_test, save_path):
+def plot_train_eval_curves(
+        acc_train, acc_test, loss_train, loss_test, save_path):
     plt.figure(figsize=(12, 6))
 
     plt.subplot(1, 2, 1)
@@ -64,7 +65,8 @@ def remove_outliers(data, others, m=2, n=10):
     return data, truncated_others
 
 
-def plot_performance_metric(metric, learning_rates, weight_decays, z_label, title, path_config, clip_outliers=False):
+def plot_performance_metric(metric, learning_rates, weight_decays,
+                            z_label, title, path_config, clip_outliers=False):
     param_to_id = {n: float(i) for i, n in enumerate(
         np.geomspace(1e-6, 1e3, num=10))}
 
@@ -101,7 +103,8 @@ def plot_performance_metric(metric, learning_rates, weight_decays, z_label, titl
     ax.set_zlabel(z_label, labelpad=15, fontsize=13)
 
     level = title.split("-")[0].lower()
-    if not os.path.exists(os.path.join(path_config["grid_search_path"], "search_3d_plots", level)):
+    if not os.path.exists(os.path.join(
+            path_config["grid_search_path"], "search_3d_plots", level)):
         os.makedirs(os.path.join(
             path_config["grid_search_path"], "search_3d_plots", level))
 

@@ -21,7 +21,8 @@ def train_kmer_for_level(model, level, k, df_train, df_val):
     return float(train_f1), pred_val
 
 
-def train_kmer_combined(model, level, train_data, train_labels, val_data, val_labels):
+def train_kmer_combined(model, level, train_data,
+                        train_labels, val_data, val_labels):
     model.fit(train_data, train_labels)
     predY = model.predict(train_data)
     f1 = f1_score(train_labels, predY, average='macro')
@@ -41,7 +42,7 @@ def train_basic(models, dirpath_kmer, dirpath_output, kmin, kmax):
             combined_train_data = []
             combined_val_data = []
 
-            for k in range(kmin, kmax+1):
+            for k in range(kmin, kmax + 1):
                 df_train = pd.read_csv(
                     '{}/{}/train_{}mer.csv'.format(dirpath_kmer, level, k))
                 df_val = pd.read_csv(

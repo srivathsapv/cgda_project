@@ -13,7 +13,7 @@ def get_kmer_dict(seq, k=3):
 
     kmer_counts = {kmer: 0 for kmer in kmers}
 
-    for kgram in [seq[i: i+k] for i in range(len(seq) - k + 1)]:
+    for kgram in [seq[i: i + k] for i in range(len(seq) - k + 1)]:
         kmer_counts[kgram] += 1
 
     return kmer_counts
@@ -30,7 +30,7 @@ def kmerize_data(fpath_csv, fpath_kmer_csv, k=3):
 
         maxval = max(list(kmers.values()))
 
-        kmers_norm = {k: v/maxval for k, v in kmers.items()}
+        kmers_norm = {k: v / maxval for k, v in kmers.items()}
 
         fdict = {**fdict, **kmers_norm}
         if 'label' in row:
