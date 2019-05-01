@@ -246,13 +246,21 @@ def train_basic(dirpath_vector, dirpath_output):
     np.save(dirpath_output + '/SVM_phylum_predictions', preds2_test)
     np.save(dirpath_output + '/RF_phylum_predictions', preds_test)
 
-    scores = clf2.decision_function(newX)
-    scores2 = clf.predict(newX)
+    scores = clf2.decision_function(newY)
+    scores2 = clf.predict(newY)
 
     score = np.amax(scores, axis=1)
 
-    fpr, tpr, thresholds = roc_curve(label, score, pos_label=2)
-    fpr2, tpr2, thresholds2 = roc_curve(label, scores2, pos_label=2)
+    scores_train = clf2.decision_function(newX)
+    scores2_train = clf.predict(newX)
+
+    score_train = np.amax(scores_train, axis=1)
+
+    np.save(dirpath_output + '/SVM_phylum_scores', score)
+    np.save(dirpath_output + '/RF_phylum_scores', scores2)
+
+    fpr, tpr, thresholds = roc_curve(label, score_train, pos_label=2)
+    fpr2, tpr2, thresholds2 = roc_curve(label, scores2_train, pos_label=2)
 
     match2 = 0
     for i in range(preds2.shape[0]):
@@ -324,8 +332,8 @@ def train_basic(dirpath_vector, dirpath_output):
     clf.fit(newX, label)
     preds2 = clf2.predict(newX)
     preds = clf.predict(newX)
-    scores = clf2.predict(newX)
-    scores1 = clf.decision_function(newX)
+    scores = clf2.predict(newY)
+    scores1 = clf.decision_function(newY)
 
     preds2_test = clf2.predict(newY)
     preds_test = clf.predict(newY)
@@ -335,8 +343,16 @@ def train_basic(dirpath_vector, dirpath_output):
 
     score = np.amax(scores1, axis=1)
 
-    fpr, tpr, thresholds = roc_curve(label, scores, pos_label=2)
-    fpr2, tpr2, thresholds2 = roc_curve(label, score, pos_label=2)
+    scores_train = clf.decision_function(newX)
+    scores2_train = clf2.predict(newX)
+
+    score_train = np.amax(scores_train, axis=1)
+
+    np.save(dirpath_output + '/SVM_class_scores', score)
+    np.save(dirpath_output + '/RF_class_scores', scores)
+
+    fpr, tpr, thresholds = roc_curve(label, scores_train, pos_label=2)
+    fpr2, tpr2, thresholds2 = roc_curve(label, score_train, pos_label=2)
 
     match2 = 0
     for i in range(preds2.shape[0]):
