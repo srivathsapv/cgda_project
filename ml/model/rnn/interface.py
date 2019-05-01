@@ -15,6 +15,7 @@ from ml.model.rnn.model import LSTMClassifier
 from ml.model.rnn.train import train
 from ml.model.rnn.train import load_data
 from ml.model.rnn.parameters import Parameters
+from ml.model.rnn.evaluate import evaluate
 
 RUN_OPTIONS = ["rnn"]
 
