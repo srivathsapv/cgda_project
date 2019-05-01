@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import torch
-import torch.utils.data as utils
+import torch.utils.data as torch_utils
 
 import ml.utils as utils
 
@@ -45,12 +45,25 @@ def load_train_val_test_data(base_path, level, analyze=True, return_label_names=
     return train_sequences, train_labels, val_sequences, val_labels, test_sequences, test_labels
 
 
+def load_data_from_dump(level, base_path):
+    split_names = ["train", "val", "test"]
+
+    data = list()
+    for split_name in split_names:
+        data_path = os.path.join(base_path, level, split_name)
+        images = np.load(os.path.join(data_path, "acgt_images.npy"))
+        labels = np.load(os.path.join(data_path, "labels.npy"))
+        data.append((images, labels))
+
+    return data
+
+
 def create_pytorch_datasets(data, labels, config):
     tensor_x = torch.stack([torch.Tensor(np.swapaxes(i, 0, 2))
                             for i in data])  # transform to torch tensors
     tensor_y = torch.stack([torch.Tensor([i]) for i in labels]).long().view(-1)
 
-    dataset = utils.TensorDataset(tensor_x, tensor_y)  # create your datset
-    dataloader = utils.DataLoader(dataset, batch_size=config["batch_size"])  # create your dataloader
+    dataset = torch_utils.TensorDataset(tensor_x, tensor_y)  # create your datset
+    dataloader = torch_utils.DataLoader(dataset, batch_size=config["batch_size"])  # create your dataloader
 
     return dataloader

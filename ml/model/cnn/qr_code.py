@@ -74,7 +74,7 @@ def viz_dna_image(dna_image, save_path="", log=False):
     plt.clf()
 
 
-def sequences_to_rgb_images(sequences, save_path):
+def sequences_to_rgb_images(sequences, labels, save_path):
     if not os.path.exists(save_path):
         os.makedirs(save_path)
     if not os.path.exists(os.path.join(save_path, "sample_rgb_images")):
@@ -82,6 +82,7 @@ def sequences_to_rgb_images(sequences, save_path):
 
     acgt_images = sequences_to_acgt_images(sequences)
     np.save(os.path.join(save_path, "acgt_images.npy"), acgt_images)
+    np.save(os.path.join(save_path, "labels.npy"), labels)
 
     for i, dna_image in enumerate(acgt_images[:10]):
         viz_dna_image(dna_image, save_path=os.path.join(
@@ -92,13 +93,14 @@ def encode_and_dump(input_path, output_path):
     print("Note: When dumping the ACGT encoded 4-channel QRCode images as numpy arrays," +
           " we also save 10 samples of how these images would look as an RGB image in sample_rgb_images folder." +
           " The RGB encoding used: Red (A), Green (C), Blue (G), Orange (T), Black (N/A)")
+
     levels = ["phylum", "class", "order"]
 
     for level in levels:
-        train_sequences, train_labels, val_sequences, val_labels, test_sequences, test_labels = load_train_val_test_data(
-            input_path, level, analyze=False)
-        for split_name, sequences in zip(["train", "val", "test"], [train_sequences, val_sequences, test_sequences]):
-            sequences_to_rgb_images(sequences, os.path.join(output_path, level, split_name))
+        data = load_train_val_test_data(input_path, level, analyze=False)
+        groupby = lambda l, n: [tuple(l[i:i+n]) for i in range(0, len(l), n)]
+        for split_name, (sequences, labels) in zip(["train", "val", "test"], groupby(data, 2)):
+            sequences_to_rgb_images(sequences, labels, os.path.join(output_path, level, split_name))
 
 
 if __name__ == '__main__':

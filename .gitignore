@@ -13,4 +13,4 @@
 __pycache__
 data/**/*.npy
 data/**/*.txt
-*.jpg
+data/**/*.jpg
