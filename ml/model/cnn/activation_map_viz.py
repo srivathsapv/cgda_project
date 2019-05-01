@@ -138,7 +138,7 @@ def viz_activations_for(level, path_config, num_samples_per_class=25):
 
 def viz_activations_for_all(path_config):
     LOGGER.info("Visualizing the First Convolution Layer of the CNN using GuidedBackprop ...")
-    LOGGER.info("Loading the pre-trained model from: path_config['models_path'] and saving the activation maps to: path_config['activations_path']")
+    LOGGER.info("Loading the pre-trained model from: path_config['models_path'] and saving the activation maps to: path_config['activations_path']\n")
     for level in ["phylum", "class", "order"]:
         LOGGER.info("Generating and saving visualizations at a " + level + "-level ...")
         viz_activations_for(level, path_config)

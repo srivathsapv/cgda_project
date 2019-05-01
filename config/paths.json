@@ -43,6 +43,7 @@
         "input_path": "data/cnn/",
         "plots_path": "results/cnn/plots/",
         "models_path": "results/cnn/models/",
-        "grid_search_path": "results/cnn/grid_search/"
+        "grid_search_path": "results/cnn/grid_search/",
+        "activations_path": "results/cnn/activations/"
     }
 }
