@@ -1,9 +1,28 @@
 {
     "hybrid_vae": {
         "learning_rate": 0.0005,
-        "num_iterations": 10000,
+        "num_iterations": 5000,
         "batch_size": 30,
         "dropout": 0.12,
         "aux": 0.4
+    },
+    "basic_kmer": {
+        "kmin": 1,
+        "kmax": 6,
+        "svm": {
+            "cache_size": 7000,
+            "gamma": "auto",
+            "C": 0.6
+        },
+        "random_forest": {
+            "n_estimators": 5
+        }
+    },
+    "basic_vector": {
+        "svm": {
+            "kernel": "rbf"
+        },
+        "random_forest": {
+        }
     }
 }

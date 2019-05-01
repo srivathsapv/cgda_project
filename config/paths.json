@@ -1,0 +1,41 @@
+{
+    "hybrid_vae_ordinal": {
+        "sequences": "data/vae/ordinal_sequences.txt",
+        "results": "results/vae/hybrid"
+    },
+    "hybrid_vae_kmer_4": {
+        "features": "data/vae/features_4mer.npy",
+        "results": "results/vae/hybrid"
+    },
+    "hybrid_vae_kmer_5": {
+        "features": "data/vae/features_5mer.npy",
+        "results": "results/vae/hybrid"
+    },
+    "lstm_vae_vector": {
+        "train": "data/lstm_vae/vector_train.csv",
+        "test": "data/lstm_vae/vector_test.csv",
+        "results": "results/vae/hybrid"
+    },
+    "lstm_vae_kmer_4": {
+        "train": "data/lstm_vae/kmer_4_train.csv",
+        "test": "data/lstm_vae/kmer_4_test.csv",
+        "results": "results/vae/lstm"
+    },
+    "lstm_vae_kmer_5": {
+        "train": "data/lstm_vae/kmer_5_train.csv",
+        "test": "data/lstm_vae/kmer_5_test.csv",
+        "results": "results/vae/lstm"
+    },
+    "basic_kmer": {
+        "dirpath_kmer": "data/kmer",
+        "results": "results/basic/kmer"
+    },
+    "basic_vector": {
+        "dirpath_vector": "data/hierarchy",
+        "results": "results/basic/vector"
+    },
+    "basic_onehot": {
+        "dirpath_onehot": "data/hierarchy",
+        "results": "results/basic/onehot"
+    }
+}

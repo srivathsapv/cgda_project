@@ -10,5 +10,8 @@
 .ipynb_checkpoints/
 *.DS_Store
 __pycache__
-data/hybrid_vae
+data/vae
 data/kmer
+data/**/*.npy
+data/**/*.txt
+data/hierarchy
