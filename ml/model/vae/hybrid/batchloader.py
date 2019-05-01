@@ -85,6 +85,10 @@ class BatchLoader:
 
         return self._wrap_tensor(encoder_input, use_cuda)
 
+    def _get_idxs(self, string):
+        return [self.char_to_idx[chr] for chr in string]
+
+    
     def _wrap_tensor(self, input, use_cuda: bool):
         """
         :param input: An list of batch size len filled with lists of input indexes
@@ -101,13 +105,12 @@ class BatchLoader:
             result = [Variable(t.from_numpy(var)).long() for var in result]
         else:
             batch_size = len(input)
-
             '''Add go token before decoder input and stop token after decoder target'''
             encoder_input = [[self.char_to_idx[self.go_token]
                               ] + list(line) for line in np.copy(input)]
             decoder_input = [[self.char_to_idx[self.go_token]
                               ] + list(line) for line in np.copy(input)]
-            decoder_target = [line + [self.char_to_idx[self.stop_token]]
+            decoder_target = [list(line) + [self.char_to_idx[self.stop_token]]
                               for line in np.copy(input)]
 
             '''Evaluate how much it is necessary to fill with pad tokens to make the same lengths'''
