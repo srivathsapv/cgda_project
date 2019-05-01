@@ -8,6 +8,7 @@
 *.fasta
 *.gz
 .ipynb_checkpoints/
-*.csv
 *.DS_Store
 __pycache__
+data/hybrid_vae
+data/kmer
