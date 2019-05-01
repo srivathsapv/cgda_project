@@ -13,4 +13,5 @@
 __pycache__
 data/**/*.npy
 data/**/*.txt
+data/**/*.jpg
 data/hierarchy

@@ -5,6 +5,7 @@ import json
 
 import ml.utils as utils
 
+
 def parse_args():
     parser = argparse.ArgumentParser(description='Taxonomic Classification')
 
@@ -22,6 +23,7 @@ def parse_args():
 
     return parser.parse_args()
 
+
 def get_interface_module(model_name):
     for fpath_interface in glob('ml/**/interface.py', recursive=True):
         module_name = fpath_interface.replace('/', '.').replace('.py', '')
@@ -32,6 +34,7 @@ def get_interface_module(model_name):
 
     raise ValueError('Model not implemented')
 
+
 def train():
     args = parse_args()
     utils.init_logger(verbose=True)
@@ -40,6 +43,7 @@ def train():
 
     interface = get_interface_module(args.model_name)
     interface.train_model(path_config, verbose=True, args=args)
+
 
 if __name__ == '__main__':
     train()
