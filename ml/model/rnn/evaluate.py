@@ -26,7 +26,8 @@ def evaluate(test_data, model, dirpath_results, parameters, device, logger, exp_
     state_files = glob.glob(exp_dir + '/*')
     for sf in state_files:
         sf_base = os.path.basename(sf)
-        load_state_file = sf
+        if sf_base == 'bestmodel.pt':
+            load_state_file = sf
 
     if load_state_file is not None:
         state = torch.load(load_state_file, map_location=device)
@@ -37,19 +38,63 @@ def evaluate(test_data, model, dirpath_results, parameters, device, logger, exp_
 
     acc,label_weights = inference(test_data, model, device)
     logger.info('Test accuracy: {}'.format(acc))
-    
-    '''
-    print(np.shape(label_weights))
-    test_labels=[]
-    for data in test_data:
-        test_labels.append(data[0])
-    test_labels=np.array(test_labels)
-    print(np.shape(test_labels))
 
-    with open('inference2.tsv','w') as fout:
-        for i in range(len(test_labels)):
-            print(test_labels[i], label_weights[i, 0], label_weights[i, 1], label_weights[i, 2], sep='\t', file=fout)
-    '''
+    logger.info('Plotting Accuracy vs. Epoch plot...')
+    metrics_file = exp_dir + '/metrics_best.tsv'
+    save_filename = exp_dir + '/' + exp_name +'plot.png'
+    with open(metrics_file) as fin:
+        X = ([x.strip().split('\t') for x in fin.readlines()])
+
+    trainacc=[]
+    testacc=[]
+    for i in range(len(X)):
+        trainacc.append(X[i][0])
+        testacc.append(X[i][2])
+    
+    trainacc = np.array(trainacc, dtype=np.float)
+    testacc = np.array(testacc, dtype=np.float)
+    if exp_name == 'rnn_phylum':
+        title = 'Phylum LSTM Classifier'
+    elif exp_name == 'rnn_class':
+        title = 'Class LSTM Classifier'
+    else:
+        title = 'Order LSTM Classifier'
+    plt.plot(range(len(trainacc)), trainacc, color='olivedrab', label='Train data')
+    plt.plot(range(len(testacc)), testacc, color='palevioletred', label='Test data')
+    plt.xlabel('Epochs')
+    plt.ylabel('Accuracy')
+    plt.title(title)
+    plt.legend()
+    plt.savefig(save_filename)
+    logger.info('Accuracy vs. Epoch plot can be found at '+save_filename)
+
+    
+    if exp_name == 'rnn_phylum':
+        logger.info('Since Phylum level has only 3 labels, creating scatter plot to visualize the encoded outputs along the three dimensions...')
+        test_labels=[]
+        for data in test_data:
+            test_labels.append(data[0])
+        test_labels=np.array(test_labels)
+
+        scatterplot_filename = exp_dir + '/rnn_phylum_scatterplot.png'
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        ax.view_init(30, 30)
+        colorlist = ['mediumvioletred', 'teal', '#0082c8']
+        for i in range(len(label_weights)):
+            if y[i]==0:
+                c1 = ax.scatter(label_weights[i, 0], label_weights[i, 1], label_weights[i, 2], color=colorlist[test_labels[i]], marker='*')
+            elif y[i]==1:
+                c2 = ax.scatter(label_weights[i, 0], label_weights[i, 1], label_weights[i, 2], color=colorlist[test_labels[i]], marker='*')
+            else:
+                c3 = ax.scatter(label_weights[i, 0], label_weights[i, 1], label_weights[i, 2], color=colorlist[test_labels[i]], marker='*')
+        ax.legend((c1, c2, c3), ('Actinobacteria', 'Firmicutes', 'Proteobacteria'), loc=0)
+        ax.set_xlabel('Encoded component 1')   
+        ax.set_ylabel('Encoded component 2')
+        ax.set_zlabel('Encoded component 3')
+        plt.savefig(scatterplot_filename)
+        logger.info('Scatter plot of LSTM encoded components for Phylum Classifier can be found at '+scatterplot_filename)
+    
     
 
     
