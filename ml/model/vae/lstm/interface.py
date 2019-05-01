@@ -12,13 +12,16 @@ from keras.optimizers import SGD, RMSprop, Adam
 from keras import objectives
 import numpy as np
 import matplotlib.pyplot as plt
+plt.style.use('seaborn')
 import argparse
 import re
 from sklearn.preprocessing import LabelEncoder
 label_encoder = LabelEncoder()
 label_encoder.fit(np.array(['A', 'C', 'G', 'T', 'Z']))
 RUN_OPTIONS = ["lstm_vae_ordinal", "lstm_vae_kmer_4", "lstm_vae_kmer_5"]
-
+import ml.utils as utils
+import warnings
+warnings.filterwarnings("ignore")
 
 def create_lstm_vae(input_dim,
                     timesteps,
@@ -194,3 +197,163 @@ def train_model(path_config, args=None):
     predicted = enc.predict(x_test, batch_size=hyperparams['batch_size'])
     np.save(dirpath_results + args.model_name + "_predicted", predicted)
     logger.info(predicted.shape)
+
+def plotFigs3D(est, pred_new, savepath, args, predicted, path_config, scheme):
+    fig = plt.figure(figsize=(4, 3))
+    ax = Axes3D(fig, rect=[0, 0, .95, 1], elev=48, azim=134)
+    est.fit(predicted)
+    labels = est.labels_
+    for i in range(labels.shape[0]):
+        ax.scatter(pred_new[i, 0], pred_new[i, 1], pred_new[i, 2],
+                   c=scheme[labels[i]], edgecolor='k')
+
+    ax.w_xaxis.set_ticklabels([])
+    ax.w_yaxis.set_ticklabels([])
+    ax.w_zaxis.set_ticklabels([])
+    ax.set_xlabel('PC1')
+    ax.set_ylabel('PC2')
+    ax.set_zlabel('PC3')
+    ax.set_title(savepath)
+    plt.savefig(path_config[args.model_name]['results'] + "/" + savepath)
+
+def plotFigs2D(est, pred_new, savepath, args, predicted, path_config, scheme):
+    plt.figure(figsize=(4, 3))
+    # ax = Axes3D(fig, rect=[0, 0, .95, 1], elev=48, azim=134)
+    est.fit(predicted)
+    labels = est.labels_
+    for i in range(labels.shape[0]):
+        plt.scatter(pred_new[i, 0], pred_new[i, 1],
+                   c=scheme[labels[i]], edgecolor='k')
+
+
+    plt.xlabel('PC1')
+    plt.ylabel('PC2')
+    # ax.set_zlabel('Petal length')
+    plt.title(savepath)
+    plt.savefig(path_config[args.model_name]['results'] + "/" + savepath)
+
+
+def test_model(path_config, args=None):
+    logger = utils.get_logger()
+    predicted = np.load(path_config[args.model_name]['results']+ "/" + args.model_name + "_predicted.npy")
+    lab = np.genfromtxt(path_config[args.model_name]['test'],delimiter='\n',dtype=None,encoding=None)
+    labels = []
+    scheme = ['tab:blue', 'tab:orange', 'tab:green', 'tab:red', 'tab:purple', 'tab:brown', 'tab:pink', 'tab:gray', 'tab:olive', 'tab:cyan']
+    if args.model_name == "lstm_vae_ordinal":
+      i = 0
+      for item in lab[1:]:
+        if item.split(",")[0][0] == "P":
+          labels.append(0)
+        elif item.split(",")[0][0] == "F":
+          labels.append(1)
+        else:
+          labels.append(2)
+        i+=1
+    else:
+      i = 0
+      for item in lab[1:]:
+        labels.append(float(item.split(",")[-1]))
+        i+=1
+
+    label = np.array(labels)
+    # print(np.unique(label).shape)
+
+    clf = PCA(n_components=3)
+    pred_new = clf.fit_transform(predicted)
+
+    est = KMeans(n_clusters=10, init = predicted[:10])
+
+    plotFigs3D(est, pred_new, 'hclustering_order_10-3D', args, predicted, path_config, scheme)
+
+    est2 = KMeans(n_clusters=5)
+
+    # fig = plt.figure(figsize=(4, 3))
+    clf2 = PCA(n_components=3)
+
+    pred_new2 = clf2.fit_transform(est.cluster_centers_)
+
+    plotFigs3D(est2, pred_new2, 'hclustering_class_5-3D', args, est.cluster_centers_, path_config, scheme)
+
+
+    est3 = KMeans(n_clusters=3)
+
+    # fig = plt.figure(figsize=(4, 3))
+    clf3 = PCA(n_components=3)
+    pred_new3 = clf3.fit_transform(est2.cluster_centers_)
+
+    plotFigs3D(est3, pred_new3, 'hclustering_phylum_3-3D', args, est2.cluster_centers_, path_config, scheme)
+
+
+    fig = plt.figure(figsize=(4, 3))
+    ax = Axes3D(fig, rect=[0, 0, .95, 1], elev=48, azim=134)
+    # print(np.unique(label).shape)
+
+    # plotFigs
+    # labelslis = np.empty((label.shape[0]), dtype='str')
+    labelslis = []
+    for i in range(label.shape[0]):
+        labelslis.append(scheme[label[i]])
+        # plt.scatter(pred_new[i, 0], pred_new[i, 1],
+        #            c=scheme[labels[i]], edgecolor='k')
+
+    # plt.scatter(pred_new_ground[:, 0], pred_new_ground[:, 1],
+    #            c=labelslis, edgecolor='k')
+    ax.scatter(pred_new[:, 0], pred_new[:, 1], pred_new[:, 2],
+               c=labelslis, edgecolor='k')
+
+    ax.w_xaxis.set_ticklabels([])
+    ax.w_yaxis.set_ticklabels([])
+    ax.w_zaxis.set_ticklabels([])
+    ax.set_xlabel('PC1')
+    ax.set_ylabel('PC2')
+    ax.set_zlabel('PC3')
+    ax.set_title('3D_groundClustering')
+    plt.savefig(path_config[args.model_name]['results'] + '/3D_groundClustering')
+
+    logger.info('3D clustering completed, plot stored in ' + path_config[args.model_name]['results'])
+
+    # from mpl_toolkits.mplot3d import Axes3D
+    clf = PCA(n_components=2)
+    pred_new = clf.fit_transform(predicted)
+
+    est = KMeans(n_clusters=10,init = predicted[:10])
+
+    plotFigs2D(est, pred_new, 'hclustering_order_10-2D', args, predicted, path_config, scheme)
+
+    clf2 = PCA(n_components=2)
+    pred_new2 = clf2.fit_transform(est.cluster_centers_)
+
+    est2 = KMeans(n_clusters=5)
+
+    plotFigs2D(est2, pred_new2, 'hclustering_class_5-2D', args, est.cluster_centers_, path_config, scheme)
+
+    clf3 = PCA(n_components=2)
+    pred_new3 = clf3.fit_transform(est2.cluster_centers_)
+
+    est3 = KMeans(n_clusters=3)
+
+    plotFigs2D(est3, pred_new3, 'hclustering_phylum_3-2D', args, est2.cluster_centers_, path_config, scheme)
+
+    clf_ground = PCA(n_components=2)
+    pred_new_ground = clf_ground.fit_transform(predicted)
+    # print(np.unique(label).shape)
+
+    plt.figure(figsize=(4, 3))
+
+    # labelslis = np.empty((label.shape[0]), dtype='str')
+    labelslis = []
+    for i in range(label.shape[0]):
+        labelslis.append(scheme[label[i]])
+        # plt.scatter(pred_new[i, 0], pred_new[i, 1],
+        #            c=scheme[labels[i]], edgecolor='k')
+
+    plt.scatter(pred_new_ground[:, 0], pred_new_ground[:, 1],
+               c=labelslis, edgecolor='k')
+
+
+    plt.xlabel('PC1')
+    plt.ylabel('PC2')
+    # ax.set_zlabel('Petal length')
+    plt.title('hclustering_ground2D')
+    plt.savefig(path_config[args.model_name]['results'] + '/hclustering_ground2D')
+    logger.info('2D clustering completed, plot stored in ' + path_config[args.model_name]['results'])

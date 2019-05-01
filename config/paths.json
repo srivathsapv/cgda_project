@@ -63,6 +63,5 @@
             "test": "data/hierarchy/order/test.csv"
         },
         "dirpath_rnn": "results/rnn"
-        
     }
 }
