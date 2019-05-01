@@ -2,6 +2,7 @@ import numpy as np
 import torch as t
 from torch.autograd import Variable
 
+
 class BatchLoader:
     def __init__(self, data_path, is_kmer=False):
         """
@@ -10,7 +11,8 @@ class BatchLoader:
         """
 
         assert isinstance(data_path, str), \
-            'Invalid data_path_prefix type. Required {}, but {} found'.format(str, type(data_path))
+            'Invalid data_path_prefix type. Required {}, but {} found'.format(
+                str, type(data_path))
 
         self.split = 6500
 
@@ -35,19 +37,22 @@ class BatchLoader:
         else:
             data = open(self.data_path, 'r', encoding='utf-8').read()
 
-            self.vocab_size, self.idx_to_char, self.char_to_idx = self.build_vocab(data)
+            self.vocab_size, self.idx_to_char, self.char_to_idx = self.build_vocab(
+                data)
 
             self.max_seq_len = 440
             data = np.array([[self.char_to_idx[char] for char in line] for line in data.split('\n')[:-1]
                              if 400 <= len(line) <= self.max_seq_len])
 
         self.valid_data, self.train_data = data[:self.split], data[self.split:]
-        self.data_len = [len(var) for var in [self.train_data, self.valid_data]]
+        self.data_len = [len(var)
+                         for var in [self.train_data, self.valid_data]]
 
     def build_vocab(self, data):
 
         # unique characters with blind symbol
-        chars = sorted(list(set(data)) + [self.pad_token, self.go_token, self.stop_token])
+        chars = sorted(list(set(data)) +
+                       [self.pad_token, self.go_token, self.stop_token])
 
         chars_vocab_size = len(chars)
 
@@ -72,9 +77,11 @@ class BatchLoader:
 
         target = 0 if target == 'train' else 1
 
-        indexes = np.array(np.random.choice(self.data_len[target], size=batch_size, replace=False))
+        indexes = np.array(np.random.choice(
+            self.data_len[target], size=batch_size, replace=False))
 
-        encoder_input = [np.copy([self.train_data, self.valid_data][target][idx]).tolist() for idx in indexes]
+        encoder_input = [np.copy(
+            [self.train_data, self.valid_data][target][idx]).tolist() for idx in indexes]
 
         return self._wrap_tensor(encoder_input, use_cuda)
 
@@ -96,13 +103,16 @@ class BatchLoader:
             batch_size = len(input)
 
             '''Add go token before decoder input and stop token after decoder target'''
-            encoder_input = [[self.char_to_idx[self.go_token]] + list(line) for line in np.copy(input)]
-            decoder_input = [[self.char_to_idx[self.go_token]] + list(line) for line in np.copy(input)]
-            decoder_target = [line + [self.char_to_idx[self.stop_token]] for line in np.copy(input)]
-
+            encoder_input = [[self.char_to_idx[self.go_token]
+                              ] + list(line) for line in np.copy(input)]
+            decoder_input = [[self.char_to_idx[self.go_token]
+                              ] + list(line) for line in np.copy(input)]
+            decoder_target = [line + [self.char_to_idx[self.stop_token]]
+                              for line in np.copy(input)]
 
             '''Evaluate how much it is necessary to fill with pad tokens to make the same lengths'''
-            to_add = [self.max_seq_len - len(input[i]) for i in range(batch_size)]
+            to_add = [self.max_seq_len - len(input[i])
+                      for i in range(batch_size)]
 
             for i in range(batch_size):
                 to_add_arr = [self.char_to_idx[self.pad_token]] * to_add[i]
@@ -114,7 +124,8 @@ class BatchLoader:
                 decoder_input[i].extend(to_add_arr)
                 decoder_target[i].extend(to_add_arr)
 
-            result = [np.array(var) for var in [encoder_input, decoder_input, decoder_target]]
+            result = [np.array(var) for var in [encoder_input,
+                                                decoder_input, decoder_target]]
             result = [Variable(t.from_numpy(var)).long() for var in result]
 
         if use_cuda:

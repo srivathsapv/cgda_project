@@ -14,14 +14,15 @@ from ml.model.vae.hybrid.vae import VAE
 
 RUN_OPTIONS = ["hybrid_vae_ordinal", "hybrid_vae_kmer_4", "hybrid_vae_kmer_5"]
 
-def train_model(path_config, verbose=True, args=None):
+
+def train_model(path_config, args=None):
     feature_type = args.model_name.replace('hybrid_vae_', '')
     hyperparams = utils.get_model_hyperparams('hybrid_vae')
 
     if args.is_demo:
         hyperparams['num_iterations'] = 1
 
-    logger = utils.get_logger(verbose)
+    logger = utils.get_logger()
 
     t.cuda.empty_cache()
 
@@ -51,16 +52,19 @@ def train_model(path_config, verbose=True, args=None):
 
     for iteration in tqdm(range(num), total=num):
         '''Train step'''
-        input, decoder_input, target = batch_loader.next_batch(hyperparams['batch_size'], 'train', use_gpu)
+        input, decoder_input, target = batch_loader.next_batch(
+            hyperparams['batch_size'], 'train', use_gpu)
         target = target.view(-1)
 
-        logits, aux_logits, kld = vae(hyperparams['dropout'], input, decoder_input)
+        logits, aux_logits, kld = vae(
+            hyperparams['dropout'], input, decoder_input)
 
         logits = logits.view(-1, batch_loader.vocab_size)
         cross_entropy = F.cross_entropy(logits, target, size_average=False)
 
         aux_logits = aux_logits.view(-1, batch_loader.vocab_size)
-        aux_cross_entropy = F.cross_entropy(aux_logits, target, size_average=False)
+        aux_cross_entropy = F.cross_entropy(
+            aux_logits, target, size_average=False)
 
         loss = cross_entropy + hyperparams['aux'] * aux_cross_entropy + kld
 
@@ -69,27 +73,38 @@ def train_model(path_config, verbose=True, args=None):
         optimizer.step()
 
         '''Validation'''
-        input, decoder_input, target = batch_loader.next_batch(hyperparams['batch_size'], 'valid', use_gpu)
+        input, decoder_input, target = batch_loader.next_batch(
+            hyperparams['batch_size'], 'valid', use_gpu)
         target = target.view(-1)
 
-        logits, aux_logits, valid_kld = vae(hyperparams['dropout'], input, decoder_input)
+        logits, aux_logits, valid_kld = vae(
+            hyperparams['dropout'], input, decoder_input)
 
         logits = logits.view(-1, batch_loader.vocab_size)
-        valid_cross_entropy = F.cross_entropy(logits, target, size_average=False)
+        valid_cross_entropy = F.cross_entropy(
+            logits, target, size_average=False)
 
         aux_logits = aux_logits.view(-1, batch_loader.vocab_size)
-        valid_aux_cross_entropy = F.cross_entropy(aux_logits, target, size_average=False)
+        valid_aux_cross_entropy = F.cross_entropy(
+            aux_logits, target, size_average=False)
 
-        loss = valid_cross_entropy + hyperparams['aux'] * valid_aux_cross_entropy + kld
+        loss = valid_cross_entropy + \
+            hyperparams['aux'] * valid_aux_cross_entropy + kld
 
         if iteration % 50 == 0:
-            train_ce = cross_entropy.data.cpu().numpy()/(1024 * hyperparams['batch_size'])
-            train_aux_ce = aux_cross_entropy.data.cpu().numpy()/(1024 * hyperparams['batch_size'])
-            train_kl = kld.data.cpu().numpy()/(1024 * hyperparams['batch_size'])
+            train_ce = cross_entropy.data.cpu().numpy() / \
+                (1024 * hyperparams['batch_size'])
+            train_aux_ce = aux_cross_entropy.data.cpu(
+            ).numpy()/(1024 * hyperparams['batch_size'])
+            train_kl = kld.data.cpu().numpy() / \
+                (1024 * hyperparams['batch_size'])
 
-            valid_ce = valid_cross_entropy.data.cpu().numpy()/(1024 * hyperparams['batch_size'])
-            valid_aux_ce = valid_aux_cross_entropy.data.cpu().numpy()/(1024 * hyperparams['batch_size'])
-            valid_kl = valid_kld.data.cpu().numpy()/(1024 * hyperparams['batch_size'])
+            valid_ce = valid_cross_entropy.data.cpu().numpy() / \
+                (1024 * hyperparams['batch_size'])
+            valid_aux_ce = valid_aux_cross_entropy.data.cpu().numpy() / \
+                (1024 * hyperparams['batch_size'])
+            valid_kl = valid_kld.data.cpu().numpy(
+            )/(1024 * hyperparams['batch_size'])
 
             metrics.append({
                 'train_ce': train_ce,
@@ -103,9 +118,12 @@ def train_model(path_config, verbose=True, args=None):
             if valid_ce <= min_ce:
                 min_vae_dict = vae.state_dict()
                 min_ce = valid_ce
-                logger.info('Saving best model in iteration {}'.format(iteration))
-                t.save(vae.state_dict(), '{}/{}_best.pth'.format(dirpath_results, args.model_name))
+                logger.info(
+                    'Saving best model in iteration {}'.format(iteration))
+                t.save(vae.state_dict(),
+                       '{}/{}_best.pth'.format(dirpath_results, args.model_name))
 
     logger.info('Saving final metrics')
     df_metrics = pd.DataFrame(metrics)
-    df_metrics.to_csv('{}/{}_metrics.csv'.format(dirpath_results, args.model_name))
+    df_metrics.to_csv(
+        '{}/{}_metrics.csv'.format(dirpath_results, args.model_name))

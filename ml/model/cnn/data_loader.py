@@ -7,7 +7,6 @@ import pandas as pd
 import torch
 import torch.utils.data as torch_utils
 
-import ml.utils as utils
 from ml.utils import get_logger
 
 plt.style.use('seaborn')
@@ -15,7 +14,7 @@ plt.style.use('seaborn')
 warnings.filterwarnings("ignore")
 torch.set_num_threads(1)
 
-LOGGER = get_logger(None)
+LOGGER = get_logger()
 
 
 def read_data_from_csv(path):
@@ -66,7 +65,9 @@ def create_pytorch_datasets(data, labels, config):
                             for i in data])  # transform to torch tensors
     tensor_y = torch.stack([torch.Tensor([i]) for i in labels]).long().view(-1)
 
-    dataset = torch_utils.TensorDataset(tensor_x, tensor_y)  # create your datset
-    dataloader = torch_utils.DataLoader(dataset, batch_size=config["batch_size"])  # create your dataloader
+    dataset = torch_utils.TensorDataset(
+        tensor_x, tensor_y)  # create your datset
+    dataloader = torch_utils.DataLoader(
+        dataset, batch_size=config["batch_size"])  # create your dataloader
 
     return dataloader

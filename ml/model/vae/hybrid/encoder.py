@@ -2,6 +2,7 @@ import torch as t
 import torch.nn as nn
 import torch.nn.functional as F
 
+
 class Encoder(nn.Module):
     def __init__(self, embed_size, latent_size, kernel_params={}):
         super(Encoder, self).__init__()

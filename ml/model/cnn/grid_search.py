@@ -14,12 +14,13 @@ from ml.utils import get_logger
 warnings.filterwarnings("ignore")
 torch.set_num_threads(1)
 
-LOGGER = get_logger(None)
+LOGGER = get_logger()
 
 
 def generate_search_space_configurations(path_config):
     # search space
-    levels_and_models = [("phylum", ConvNet(3)), ("class", ConvNet(5)), ("order", ConvNet(10))]
+    levels_and_models = [("phylum", ConvNet(3)),
+                         ("class", ConvNet(5)), ("order", ConvNet(10))]
     lr_space = np.geomspace(1e-6, 1e3, num=10)
     weight_decay = np.geomspace(1e-6, 1e3, num=10)
 
@@ -51,9 +52,11 @@ def run_grid_search_parallel(path_config):
     if not os.path.exists(path_config["grid_search_path"]):
         os.makedirs(path_config["grid_search_path"])
 
-    np.save(os.path.join(path_config["grid_search_path"], "grid_search_best_cnn_logs.npy"), np.array(experiment_logs))
+    np.save(os.path.join(path_config["grid_search_path"],
+                         "grid_search_best_cnn_logs.npy"), np.array(experiment_logs))
 
 
 if __name__ == '__main__':
-    path_config = {"input_path": "./data/cnn/", "plots_path": "./results/cnn/plots/", "models_path": "./results/cnn/models/", "grid_search_path": "./results/cnn/grid_search/"}
+    path_config = {"input_path": "./data/cnn/", "plots_path": "./results/cnn/plots/",
+                   "models_path": "./results/cnn/models/", "grid_search_path": "./results/cnn/grid_search/"}
     run_grid_search_parallel(path_config)

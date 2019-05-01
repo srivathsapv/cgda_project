@@ -37,12 +37,11 @@ def get_interface_module(model_name):
 
 def train():
     args = parse_args()
-    utils.init_logger(verbose=True)
 
     path_config = json.loads(open('config/paths.json', 'r').read())
 
     interface = get_interface_module(args.model_name)
-    interface.train_model(path_config, verbose=True, args=args)
+    interface.train_model(path_config, args=args)
 
 
 if __name__ == '__main__':

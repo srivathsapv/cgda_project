@@ -2,6 +2,7 @@ import torch as t
 import torch.nn as nn
 import torch.nn.functional as F
 
+
 class Decoder(nn.Module):
     def __init__(self, vocab_size, latent_variable_size, rnn_size, rnn_num_layers, embed_size, kernel_params={}):
         super(Decoder, self).__init__()
@@ -12,7 +13,8 @@ class Decoder(nn.Module):
         self.embed_size = embed_size
         self.rnn_num_layers = rnn_num_layers
 
-        self.conv1 = nn.ConvTranspose1d(self.latent_variable_size, 64, **kernel_params['conv1'])
+        self.conv1 = nn.ConvTranspose1d(
+            self.latent_variable_size, 64, **kernel_params['conv1'])
         self.bn1 = nn.BatchNorm1d(64)
 
         self.conv2 = nn.ConvTranspose1d(64, 64, **kernel_params['conv2'])
@@ -21,7 +23,8 @@ class Decoder(nn.Module):
         self.conv3 = nn.ConvTranspose1d(64, 32, **kernel_params['conv3'])
         self.bn3 = nn.BatchNorm1d(32)
 
-        self.conv4 = nn.ConvTranspose1d(32, self.vocab_size, **kernel_params['conv4'])
+        self.conv4 = nn.ConvTranspose1d(
+            32, self.vocab_size, **kernel_params['conv4'])
 
         self.elu = nn.ELU()
 
@@ -41,7 +44,8 @@ class Decoder(nn.Module):
         """
 
         aux_logits = self.conv_decoder(latent_variable)
-        logits, _ = self.rnn_decoder(aux_logits, decoder_input, initial_state=None)
+        logits, _ = self.rnn_decoder(
+            aux_logits, decoder_input, initial_state=None)
         return logits, aux_logits
 
     def conv_decoder(self, latent_variable):
@@ -55,7 +59,8 @@ class Decoder(nn.Module):
         return t.transpose(out, 1, 2).contiguous()
 
     def rnn_decoder(self, cnn_out, decoder_input, initial_state=None):
-        logits, final_state = self.rnn(t.cat([cnn_out, decoder_input], 2), initial_state)
+        logits, final_state = self.rnn(
+            t.cat([cnn_out, decoder_input], 2), initial_state)
 
         [batch_size, seq_len, _] = logits.size()
         logits = logits.contiguous().view(-1, self.rnn_size)

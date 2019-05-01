@@ -13,7 +13,7 @@ plt.style.use('seaborn')
 warnings.filterwarnings("ignore")
 torch.set_num_threads(1)
 
-LOGGER = get_logger(None)
+LOGGER = get_logger()
 
 IMAGE_WIDTH = IMAGE_HEIGHT = 21  # 441 length zero-padded DNA sequences
 IMAGE_CHANNELS = 4  # A, C, G, T
@@ -44,7 +44,8 @@ BASE_PAIR_CHAR = {
 
 
 def sequences_to_acgt_images(sequences):
-    image = np.zeros((len(sequences), IMAGE_WIDTH, IMAGE_HEIGHT, IMAGE_CHANNELS))
+    image = np.zeros((len(sequences), IMAGE_WIDTH,
+                      IMAGE_HEIGHT, IMAGE_CHANNELS))
     for i, sequence in enumerate(sequences):
         for loc, base_pair in enumerate(sequence):
             row = loc // IMAGE_HEIGHT
@@ -100,9 +101,11 @@ def encode_and_dump(input_path, output_path):
 
     for level in levels:
         data = load_train_val_test_data(input_path, level, analyze=False)
-        def groupby(l, n): return [tuple(l[i:i+n]) for i in range(0, len(l), n)]
+        def groupby(l, n): return [tuple(l[i:i+n])
+                                   for i in range(0, len(l), n)]
         for split_name, (sequences, labels) in zip(["train", "val", "test"], groupby(data, 2)):
-            sequences_to_rgb_images(sequences, labels, os.path.join(output_path, level, split_name))
+            sequences_to_rgb_images(sequences, labels, os.path.join(
+                output_path, level, split_name))
 
 
 if __name__ == '__main__':

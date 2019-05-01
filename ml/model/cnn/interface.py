@@ -5,8 +5,7 @@ import ml.utils as utils
 RUN_OPTIONS = ["cnn_qrcode"]
 
 
-def train_model(path_config, args, verbose=True):
-    utils.init_logger(verbose)
+def train_model(path_config, args):
 
     path_config = path_config["cnn_qrcode"]
 

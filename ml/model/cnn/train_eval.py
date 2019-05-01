@@ -18,7 +18,7 @@ from ml.utils import get_logger
 warnings.filterwarnings("ignore")
 torch.set_num_threads(1)
 
-LOGGER = get_logger(None)
+LOGGER = get_logger()
 
 
 def cnn_train_model(model, train_loader, test_loader, optimizer, config):
@@ -63,7 +63,8 @@ def cnn_train_model(model, train_loader, test_loader, optimizer, config):
             correct += pred.eq(b_y.data.view_as(pred)).long().cpu().sum()
             train_loss += F.nll_loss(scores, b_y, reduction='sum').item()
 
-        acc_train[epoch] = 100 * float(correct) / float(len(train_loader.dataset))
+        acc_train[epoch] = 100 * \
+            float(correct) / float(len(train_loader.dataset))
         loss_train[epoch] = train_loss / len(train_loader.dataset)
 
         # testing
@@ -80,24 +81,31 @@ def cnn_train_model(model, train_loader, test_loader, optimizer, config):
             correct += pred.eq(b_y.data.view_as(pred)).long().cpu().sum()
 
         loss_test[epoch] = test_loss/len(test_loader.dataset)
-        acc_test[epoch] = 100 * float(correct) / float(len(test_loader.dataset))
+        acc_test[epoch] = 100 * float(correct) / \
+            float(len(test_loader.dataset))
         time_test[epoch] = time.perf_counter() - t0
 
     return [acc_train, acc_test, loss_train, loss_test, model]
 
 
 def cnn_train_eval(level, model, path_config, eval_on="test", cnn_config={"lr": 0.001, "weight_decay": 0, "epoch": 25, "batch_size": 32, "device": "cpu"}, is_plot=True, save_model=False):
-    (train_images, train_labels), (val_images, val_labels), (test_images, test_labels) = load_data_from_dump(level, path_config["input_path"])
+    (train_images, train_labels), (val_images, val_labels), (test_images,
+                                                             test_labels) = load_data_from_dump(level, path_config["input_path"])
 
-    train_loader = create_pytorch_datasets(train_images, train_labels, cnn_config)
+    train_loader = create_pytorch_datasets(
+        train_images, train_labels, cnn_config)
 
     if eval_on == "test":
-        eval_loader = create_pytorch_datasets(test_images, test_labels, cnn_config)
+        eval_loader = create_pytorch_datasets(
+            test_images, test_labels, cnn_config)
     elif eval_on == "val":
-        eval_loader = create_pytorch_datasets(val_images, val_labels, cnn_config)
+        eval_loader = create_pytorch_datasets(
+            val_images, val_labels, cnn_config)
 
-    optimizer = torch.optim.Adam(model.parameters(), lr=cnn_config["lr"], weight_decay=cnn_config["weight_decay"])
-    logs = cnn_train_model(model, train_loader, eval_loader, optimizer, cnn_config)
+    optimizer = torch.optim.Adam(model.parameters(
+    ), lr=cnn_config["lr"], weight_decay=cnn_config["weight_decay"])
+    logs = cnn_train_model(model, train_loader,
+                           eval_loader, optimizer, cnn_config)
 
     LOGGER.info("\nTrain Accuracy:" + str(logs[0][-1]))
     LOGGER.info("Train Loss:" + str(logs[2][-1]))
@@ -107,12 +115,14 @@ def cnn_train_eval(level, model, path_config, eval_on="test", cnn_config={"lr": 
     if save_model:
         if not os.path.exists(path_config["models_path"]):
             os.makedirs(path_config["models_path"])
-        torch.save(logs[-1].state_dict(), os.path.join(path_config["models_path"], "best_" + level + "_cnn_model"))
+        torch.save(logs[-1].state_dict(), os.path.join(
+            path_config["models_path"], "best_" + level + "_cnn_model"))
 
     if is_plot:
         if not os.path.exists(os.path.join(path_config["plots_path"], level)):
             os.makedirs(os.path.join(path_config["plots_path"], level))
-        plot_train_eval_curves(*(logs[:-1] + [os.path.join(path_config["plots_path"], level, "train_" + eval_on + "_loss_acc.jpg")]))
+        plot_train_eval_curves(
+            *(logs[:-1] + [os.path.join(path_config["plots_path"], level, "train_" + eval_on + "_loss_acc.jpg")]))
 
     output = logs[:-1] + [{**cnn_config, **{"trained_model": logs[-1]}}]
 
@@ -120,36 +130,46 @@ def cnn_train_eval(level, model, path_config, eval_on="test", cnn_config={"lr": 
 
 
 def train_best_cnn_models(cnn_config, path_config, is_demo=False, save_model=True, is_plot=True):
-    LOGGER.info("Training with the best possible params and evaluating on validation and test datasets ...")
+    LOGGER.info(
+        "Training with the best possible params and evaluating on validation and test datasets ...")
 
     LOGGER.info("NOTE: The best possible parameters were found using the grid_search.py script file." +
-          " This tests 300 different settings and ran on a 40 core machine for 2 hours." +
-          " To see the grid search 3D plots over weight_decay and learning_rate," +
-          " go to path_config['grid_search_results'].")
+                " This tests 300 different settings and ran on a 40 core machine for 2 hours." +
+                " To see the grid search 3D plots over weight_decay and learning_rate," +
+                " go to path_config['grid_search_results'].")
 
-    LOGGER.info("NOTE: Run grid_search.py if you want to run the grid search from scratch.")
+    LOGGER.info(
+        "NOTE: Run grid_search.py if you want to run the grid search from scratch.")
 
     plot_grid_search(path_config)
 
     if is_demo:
-        LOGGER.info("WARNING: Runnning in DEMO mode. (Only 2 epochs will be run and the trained model will not be saved)")
+        LOGGER.info(
+            "WARNING: Runnning in DEMO mode. (Only 2 epochs will be run and the trained model will not be saved)")
         for level in ["phylum", "class", "order"]:
             cnn_config[level]["epoch"] = 2
         save_model = False
         is_plot = False
 
-    cnn_train_eval("phylum", ConvNet(3), path_config, eval_on="val", cnn_config=cnn_config["phylum"], is_plot=is_plot, save_model=False)
-    cnn_train_eval("phylum", ConvNet(3), path_config, eval_on="test", cnn_config=cnn_config["phylum"], is_plot=is_plot, save_model=save_model)
+    cnn_train_eval("phylum", ConvNet(3), path_config, eval_on="val",
+                   cnn_config=cnn_config["phylum"], is_plot=is_plot, save_model=False)
+    cnn_train_eval("phylum", ConvNet(3), path_config, eval_on="test",
+                   cnn_config=cnn_config["phylum"], is_plot=is_plot, save_model=save_model)
 
-    cnn_train_eval("class", ConvNet(5), path_config, eval_on="val", cnn_config=cnn_config["class"], is_plot=is_plot, save_model=False)
-    cnn_train_eval("class", ConvNet(5), path_config, eval_on="test", cnn_config=cnn_config["class"], is_plot=is_plot, save_model=save_model)
+    cnn_train_eval("class", ConvNet(5), path_config, eval_on="val",
+                   cnn_config=cnn_config["class"], is_plot=is_plot, save_model=False)
+    cnn_train_eval("class", ConvNet(5), path_config, eval_on="test",
+                   cnn_config=cnn_config["class"], is_plot=is_plot, save_model=save_model)
 
-    cnn_train_eval("order", ConvNet(10), path_config, eval_on="val", cnn_config=cnn_config["order"], is_plot=is_plot, save_model=False)
-    cnn_train_eval("order", ConvNet(10), path_config, eval_on="test", cnn_config=cnn_config["order"], is_plot=is_plot, save_model=save_model)
+    cnn_train_eval("order", ConvNet(10), path_config, eval_on="val",
+                   cnn_config=cnn_config["order"], is_plot=is_plot, save_model=False)
+    cnn_train_eval("order", ConvNet(10), path_config, eval_on="test",
+                   cnn_config=cnn_config["order"], is_plot=is_plot, save_model=save_model)
 
 
 if __name__ == '__main__':
-    path_config = {"input_path": "./data/cnn/", "plots_path": "./results/cnn/plots/", "models_path": "./results/cnn/models/", "grid_search_path": "./results/cnn/grid_search/"}
+    path_config = {"input_path": "./data/cnn/", "plots_path": "./results/cnn/plots/",
+                   "models_path": "./results/cnn/models/", "grid_search_path": "./results/cnn/grid_search/"}
 
     DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
     cnn_config = {
