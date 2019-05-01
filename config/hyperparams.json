@@ -4,7 +4,11 @@
     "num_iterations": 5000,
     "batch_size": 30,
     "dropout": 0.12,
-    "aux": 0.4
+    "aux": 0.4,
+    "embed_size": 16,
+    "latent_size": 100,
+    "decoder_rnn_size": 1000,
+    "decoder_rnn_num_layers": 1
   },
   "lstm_vae": {
     "num_iterations": 20,
