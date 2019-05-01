@@ -34,4 +34,4 @@ class LSTMClassifier(nn.Module):
         lstm_out, self.hidden = self.lstm(x, self.hidden)
         y  = self.hidden2label(lstm_out[-1])
         log_probs = F.log_softmax(y)
-        return lstm_out[-1], log_probs
+        return lstm_out[-1], log_probs, y

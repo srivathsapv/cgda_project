@@ -61,7 +61,8 @@
             "train": "data/hierarchy/order/train.csv",
             "val": "data/hierarchy/order/val.csv",
             "test": "data/hierarchy/order/test.csv"
-        }
+        },
+        "dirpath_rnn": "results/rnn"
         
     }
 }

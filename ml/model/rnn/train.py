@@ -45,9 +45,9 @@ def train(train_data, valid_data, test_data, model, loss_fun, optimizer, dirpath
              'enc_state': model.state_dict(),
              'opt_state': optimizer.state_dict(),
                      }
-        filename = 'bestmodel.pt'
+        filename = 'bestmodel1.pt'
         save_file = exp_dir + '/' + filename
-        metrics_file = exp_dir+'/metrics_best.tsv'
+        metrics_file = exp_dir+'/metrics_best1.tsv'
         torch.save(state, save_file)
         write_metrics(metrics, metrics_file)
         logger.info('Saving final model to '+save_file)
@@ -68,7 +68,7 @@ def train_one_epoch(train_data, model, loss_fun, optimizer, device):
         gold = prep_single_label(label, device)
         model.zero_grad()
         model.hidden = model.init_hidden(device)
-        output, log_probs = model(ip)          
+        output, log_probs, _ = model(ip)          
         loss = loss_fun(log_probs, gold)
         loss.backward()
         optimizer.step()
@@ -101,7 +101,7 @@ def inference(inf_data, model, loss_fun, device):
         gold = prep_single_label(label, device)
         with torch.no_grad():
             model.hidden = model.init_hidden(device)
-            output, log_probs = model(ip)          
+            output, log_probs, _ = model(ip)          
         loss = loss_fun(log_probs, gold)
         total_loss += loss
 

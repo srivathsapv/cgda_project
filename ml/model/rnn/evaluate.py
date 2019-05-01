@@ -12,6 +12,10 @@ import glob
 import os
 import numpy as np
 
+from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 unused import
+
+import matplotlib.pyplot as plt
+
 
 def evaluate(test_data, model, dirpath_results, parameters, device, logger, exp_name):
 
@@ -31,7 +35,7 @@ def evaluate(test_data, model, dirpath_results, parameters, device, logger, exp_
 
     if load_state_file is not None:
         state = torch.load(load_state_file, map_location=device)
-        logger.info('Loaded checkpoint '+load_state_file)
+        logger.info('Loaded saved model '+load_state_file)
 
     if state is not None:
         model.load_state_dict(state['enc_state'])
@@ -39,9 +43,10 @@ def evaluate(test_data, model, dirpath_results, parameters, device, logger, exp_
     acc,label_weights = inference(test_data, model, device)
     logger.info('Test accuracy: {}'.format(acc))
 
+    
     logger.info('Plotting Accuracy vs. Epoch plot...')
     metrics_file = exp_dir + '/metrics_best.tsv'
-    save_filename = exp_dir + '/' + exp_name +'plot.png'
+    save_filename = exp_dir + '/' + exp_name +'_lineplot.png'
     with open(metrics_file) as fin:
         X = ([x.strip().split('\t') for x in fin.readlines()])
 
@@ -59,12 +64,15 @@ def evaluate(test_data, model, dirpath_results, parameters, device, logger, exp_
         title = 'Class LSTM Classifier'
     else:
         title = 'Order LSTM Classifier'
-    plt.plot(range(len(trainacc)), trainacc, color='olivedrab', label='Train data')
-    plt.plot(range(len(testacc)), testacc, color='palevioletred', label='Test data')
-    plt.xlabel('Epochs')
-    plt.ylabel('Accuracy')
-    plt.title(title)
-    plt.legend()
+
+    fig = plt.figure()
+    ax1 = fig.add_subplot(221)
+    ax1.plot(range(len(trainacc)), trainacc, color='olivedrab', label='Train data')
+    ax1.plot(range(len(testacc)), testacc, color='palevioletred', label='Test data')
+    ax1.set_xlabel('Epochs')
+    ax1.set_ylabel('Accuracy')
+    ax1.set_title(title)
+    ax1.legend()
     plt.savefig(save_filename)
     logger.info('Accuracy vs. Epoch plot can be found at '+save_filename)
 
@@ -74,7 +82,7 @@ def evaluate(test_data, model, dirpath_results, parameters, device, logger, exp_
         test_labels=[]
         for data in test_data:
             test_labels.append(data[0])
-        test_labels=np.array(test_labels)
+        test_labels=np.array(test_labels, dtype=np.int)
 
         scatterplot_filename = exp_dir + '/rnn_phylum_scatterplot.png'
         fig = plt.figure()
@@ -82,9 +90,9 @@ def evaluate(test_data, model, dirpath_results, parameters, device, logger, exp_
         ax.view_init(30, 30)
         colorlist = ['mediumvioletred', 'teal', '#0082c8']
         for i in range(len(label_weights)):
-            if y[i]==0:
+            if test_labels[i]==0:
                 c1 = ax.scatter(label_weights[i, 0], label_weights[i, 1], label_weights[i, 2], color=colorlist[test_labels[i]], marker='*')
-            elif y[i]==1:
+            elif test_labels[i]==1:
                 c2 = ax.scatter(label_weights[i, 0], label_weights[i, 1], label_weights[i, 2], color=colorlist[test_labels[i]], marker='*')
             else:
                 c3 = ax.scatter(label_weights[i, 0], label_weights[i, 1], label_weights[i, 2], color=colorlist[test_labels[i]], marker='*')
@@ -94,6 +102,7 @@ def evaluate(test_data, model, dirpath_results, parameters, device, logger, exp_
         ax.set_zlabel('Encoded component 3')
         plt.savefig(scatterplot_filename)
         logger.info('Scatter plot of LSTM encoded components for Phylum Classifier can be found at '+scatterplot_filename)
+    
     
     
 
@@ -116,8 +125,6 @@ def inference(inf_data, model, device):
             model.hidden = model.init_hidden(device)
             output, log_probs, y = model(ip)
         label_weights.append([y[0,0], y[0,1], y[0,2]])
-        loss = loss_fun(log_probs, gold)
-        total_loss += loss
 
         pred = torch.max(log_probs, 1)[1]
         if pred==gold:
@@ -129,7 +136,7 @@ def inference(inf_data, model, device):
         truth.append(gold)
             
     acc = correct/len(inf_data)
-    return acc, np.array(label_weights)
+    return acc, np.array(label_weights, dtype=np.float)
     
 def find_accuracy(pred, gold):
     acc=0

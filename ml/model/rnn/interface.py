@@ -17,6 +17,9 @@ from ml.model.rnn.train import load_data
 from ml.model.rnn.parameters import Parameters
 from ml.model.rnn.evaluate import evaluate
 
+import warnings
+warnings.filterwarnings("ignore")
+
 RUN_OPTIONS = ["rnn"]
 
 def train_model(path_config, args=None):
@@ -84,8 +87,6 @@ def test_model(path_config, args=None):
     data_config = path_config['phylum']
     test_data = load_data(data_config['test'])
     model = LSTMClassifier(parameters.embedding_dim, parameters.hidden_dim, parameters.vocab_size, parameters.label_size, device).to(device)
-    loss_fun = nn.NLLLoss()
-    optimizer = optim.Adam(model.parameters(),lr = learning_rate)
     evaluate(test_data, model, dirpath_results, parameters, device, logger, 'rnn_phylum')
 
     logger.info('Testing RNN Class Classifier')
@@ -93,8 +94,6 @@ def test_model(path_config, args=None):
     data_config = path_config['class']
     test_data = load_data(data_config['test'])
     model = LSTMClassifier(parameters.embedding_dim, parameters.hidden_dim, parameters.vocab_size, parameters.label_size, device).to(device)
-    loss_fun = nn.NLLLoss()
-    optimizer = optim.Adam(model.parameters(),lr = learning_rate)
     evaluate(test_data, model, dirpath_results, parameters, device, logger, 'rnn_class')
 
     logger.info('Testing RNN Order Classifier')
@@ -102,8 +101,6 @@ def test_model(path_config, args=None):
     data_config = path_config['order']
     test_data = load_data(data_config['test'])
     model = LSTMClassifier(parameters.embedding_dim, parameters.hidden_dim, parameters.vocab_size, parameters.label_size, device).to(device)
-    loss_fun = nn.NLLLoss()
-    optimizer = optim.Adam(model.parameters(),lr = learning_rate)
     evaluate(test_data, model, dirpath_results, parameters, device, logger, 'rnn_order')
     
 
