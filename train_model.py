@@ -8,7 +8,7 @@ import ml.utils as utils
 def parse_args():
     parser = argparse.ArgumentParser(description='Taxonomic Classification')
 
-    model_names = ['basic_kmer', 'basic_vector', 'basic_onehot', 'cnn_qrcode', 'rnn', 'lstm_vae',
+    model_names = ['basic_kmer', 'basic_vector', 'basic_onehot', 'cnn_qrcode', 'rnn', 'lstm_vae_ordinal', 'lstm_vae_kmer_4', 'lstm_vae_kmer_5',
                    'hybrid_vae_ordinal', 'hybrid_vae_kmer_4',
                    'hybrid_vae_kmer_5']
 
