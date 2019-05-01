@@ -17,10 +17,8 @@ def parse_args():
                               'are {}'.format(','.join(model_names))),
                         choices=set(model_names))
 
-    parser.add_argument('--output-path', type=str, help='Path to store training artifacts - network weights, analysis plots etc')
-
-    parser.add_argument('--use-gpu', type=bool, default=False,
-                        help='If True, GPU device is used for training (default: False)')
+    parser.add_argument('--is-demo', action='store_true',
+                        help='If True, train script is run in demo mode with limited number of epochs (typically 1 or 2)')
 
     return parser.parse_args()
 
@@ -37,12 +35,11 @@ def get_interface_module(model_name):
 def train():
     args = parse_args()
     utils.init_logger(verbose=True)
-    
-    data_config = json.loads(open('config/data_files.json', 'r').read())
+
+    path_config = json.loads(open('config/paths.json', 'r').read())
 
     interface = get_interface_module(args.model_name)
-    interface.train_model(data_config, args.output_path,
-                          args.use_gpu, verbose=True, args=args)
+    interface.train_model(path_config, verbose=True, args=args)
 
 if __name__ == '__main__':
     train()
