@@ -6,6 +6,13 @@
     "dropout": 0.12,
     "aux": 0.4
   },
+  "lstm_vae": {
+    "num_iterations": 20,
+    "batch_size": 1,
+    "intermediate_dim": 210,
+    "latent_dim": 100,
+    "epsilon_std": 1
+  },
   "basic_kmer": {
     "kmin": 1,
     "kmax": 6,
