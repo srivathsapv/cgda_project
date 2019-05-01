@@ -17,11 +17,10 @@
         "random_forest": {
             "n_estimators": 5
         }
-    }
-
+    },
     "basic_vector": {
         "svm": {
-            "kernel": rbf
+            "kernel": "rbf"
         },
         "random_forest": {
         }
