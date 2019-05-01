@@ -25,19 +25,18 @@ def train_model(data_config, dirpath_results, use_gpu=True, verbose=True,
            dirpath_output=dirpath_results, kmin=kmer_config['kmin'],
            kmax=kmer_config['kmax'], verbose=verbose
        )
-   elif 'vector' in args.model_name:
+   elif args.model_name == 'basic_vector':
        data_config = data_config['basic_vector']
        vector_train_basic(
            dirpath_vector=data_config['dirpath_vector'],
            dirpath_output=dirpath_results, verbose=verbose
        )
 
-   elif 'onehot' in args.model_name:
+   elif args.model_name == 'basic_onehot':
        data_config = data_config['basic_onehot']
        onehot_train_basic(
            dirpath_vector=data_config['dirpath_onehot'],
            dirpath_output=dirpath_results, verbose=verbose
        )
-       # rest of the code
    else:
        raise ValueError('Basic ML model {} not supported'.format(args.model_name))
