@@ -5,19 +5,16 @@ import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
 
+from ml.utils import get_logger
+
 plt.style.use('seaborn')
 
 warnings.filterwarnings("ignore")
 
+LOGGER = get_logger(None)
+
 
 def plot_train_eval_curves(acc_train, acc_test, loss_train, loss_test, save_path):
-    print("\n")
-    print("Train Accuracy:", str(acc_train[-1]))
-    print("Train Loss:", str(loss_train[-1]))
-    print("Test Accuracy:", str(acc_test[-1]))
-    print("Test Loss:", str(loss_test[-1]))
-    print("\n")
-
     plt.figure(figsize=(12, 6))
 
     plt.subplot(1, 2, 1)
@@ -125,7 +122,7 @@ def plot_grid_search_plots(model, title, path_config):
 
 
 def plot_grid_search(path_config):
-    print("Using precomputed grid search results to plot all 3d-plots of the search space into the path_config['grid_search_results'] ...")
+    LOGGER.info("Using precomputed grid search results to plot all 3d-plots of the search space into the path_config['grid_search_results'] ...")
     experiment_logs = np.load(os.path.join(path_config["grid_search_path"], "grid_search_best_cnn_logs.npy"))
 
     models = segregate_models(experiment_logs)

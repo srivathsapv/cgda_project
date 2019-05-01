@@ -4,8 +4,12 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+from ml.utils import get_logger
+
 warnings.filterwarnings("ignore")
 torch.set_num_threads(1)
+
+LOGGER = get_logger(None)
 
 
 class ConvNet(nn.Module):

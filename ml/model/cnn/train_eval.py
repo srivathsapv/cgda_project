@@ -13,9 +13,12 @@ from ml.model.cnn.architecture import ConvNet
 from ml.model.cnn.data_loader import (create_pytorch_datasets,
                                       load_data_from_dump)
 from ml.model.cnn.plot import plot_grid_search, plot_train_eval_curves
+from ml.utils import get_logger
 
 warnings.filterwarnings("ignore")
 torch.set_num_threads(1)
+
+LOGGER = get_logger(None)
 
 
 def cnn_train_model(model, train_loader, test_loader, optimizer, config):
@@ -96,6 +99,11 @@ def cnn_train_eval(level, model, path_config, eval_on="test", cnn_config={"lr": 
     optimizer = torch.optim.Adam(model.parameters(), lr=cnn_config["lr"], weight_decay=cnn_config["weight_decay"])
     logs = cnn_train_model(model, train_loader, eval_loader, optimizer, cnn_config)
 
+    LOGGER.info("\nTrain Accuracy:" + str(logs[0][-1]))
+    LOGGER.info("Train Loss:" + str(logs[2][-1]))
+    LOGGER.info("Test Accuracy:" + str(logs[1][-1]))
+    LOGGER.info("Test Loss:" + str(logs[3][-1]) + "\n")
+
     if save_model:
         if not os.path.exists(path_config["models_path"]):
             os.makedirs(path_config["models_path"])
@@ -112,19 +120,19 @@ def cnn_train_eval(level, model, path_config, eval_on="test", cnn_config={"lr": 
 
 
 def train_best_cnn_models(cnn_config, path_config, is_demo=False, save_model=True, is_plot=True):
-    print("Training with the best possible params and evaluating on validation and test datasets ...")
+    LOGGER.info("Training with the best possible params and evaluating on validation and test datasets ...")
 
-    print("NOTE: The best possible parameters were found using the grid_search.py script file." +
+    LOGGER.info("NOTE: The best possible parameters were found using the grid_search.py script file." +
           " This tests 300 different settings and ran on a 40 core machine for 2 hours." +
           " To see the grid search 3D plots over weight_decay and learning_rate," +
           " go to path_config['grid_search_results'].")
 
-    print("NOTE: Run grid_search.py if you want to run the grid search from scratch.")
+    LOGGER.info("NOTE: Run grid_search.py if you want to run the grid search from scratch.")
 
     plot_grid_search(path_config)
 
     if is_demo:
-        print("WARNING: Runnning in DEMO mode. (Only 2 epochs will be run and the trained model will not be saved)")
+        LOGGER.info("WARNING: Runnning in DEMO mode. (Only 2 epochs will be run and the trained model will not be saved)")
         for level in ["phylum", "class", "order"]:
             cnn_config[level]["epoch"] = 2
         save_model = False
@@ -141,7 +149,7 @@ def train_best_cnn_models(cnn_config, path_config, is_demo=False, save_model=Tru
 
 
 if __name__ == '__main__':
-    path_config = {"input_path": "./data/cnn_qrcode/", "plots_path": "./results/cnn_qrcode/plots/", "models_path": "./results/cnn_qrcode/models/", "grid_search_path": "./results/cnn_qrcode/grid_search/"}
+    path_config = {"input_path": "./data/cnn/", "plots_path": "./results/cnn/plots/", "models_path": "./results/cnn/models/", "grid_search_path": "./results/cnn/grid_search/"}
 
     DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
     cnn_config = {

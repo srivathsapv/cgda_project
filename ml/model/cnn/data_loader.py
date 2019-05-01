@@ -8,11 +8,14 @@ import torch
 import torch.utils.data as torch_utils
 
 import ml.utils as utils
+from ml.utils import get_logger
 
 plt.style.use('seaborn')
 
 warnings.filterwarnings("ignore")
 torch.set_num_threads(1)
+
+LOGGER = get_logger(None)
 
 
 def read_data_from_csv(path):
@@ -34,12 +37,12 @@ def load_train_val_test_data(base_path, level, analyze=True, return_label_names=
 
     if analyze:
         a = list(map(lambda x: len(x), train_sequences))
-        print("DNA Sequence Length Statistics:")
-        print("Max:", np.max(a))
-        print("Min:", np.min(a))
-        print("Mean:", np.ceil(np.mean(a)))
-        print("Median:", np.ceil(np.median(a)))
-        print("Sqrt of Max:", np.ceil(np.sqrt(np.max(a))))
+        LOGGER.info("DNA Sequence Length Statistics:")
+        LOGGER.info("Max: " + str(np.max(a)))
+        LOGGER.info("Min: " + str(np.min(a)))
+        LOGGER.info("Mean: " + str(np.ceil(np.mean(a))))
+        LOGGER.info("Median: " + str(np.ceil(np.median(a))))
+        LOGGER.info("Sqrt of Max: " + str(np.ceil(np.sqrt(np.max(a)))))
     if return_label_names:
         return train_sequences, train_labels, val_sequences, val_labels, test_sequences, test_labels, test_label_names
     return train_sequences, train_labels, val_sequences, val_labels, test_sequences, test_labels

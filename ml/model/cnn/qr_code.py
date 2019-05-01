@@ -5,13 +5,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch
 
-import ml.utils as utils
 from ml.model.cnn.data_loader import load_train_val_test_data
+from ml.utils import get_logger
 
 plt.style.use('seaborn')
 
 warnings.filterwarnings("ignore")
 torch.set_num_threads(1)
+
+LOGGER = get_logger(None)
 
 IMAGE_WIDTH = IMAGE_HEIGHT = 21  # 441 length zero-padded DNA sequences
 IMAGE_CHANNELS = 4  # A, C, G, T
@@ -65,8 +67,8 @@ def viz_dna_image(dna_image, save_path="", log=False):
     plt.imshow(dna_rgb_image)
 
     if log:
-        print("DNA Sequence:\n", dna_char_image.flatten())
-        print("DNA Block:\n", dna_char_image)
+        LOGGER.info("DNA Sequence:\n" + str(dna_char_image.flatten()))
+        LOGGER.info("DNA Block:\n" + str(dna_char_image))
 
     if save_path:
         plt.savefig(save_path)
@@ -90,15 +92,15 @@ def sequences_to_rgb_images(sequences, labels, save_path):
 
 
 def encode_and_dump(input_path, output_path):
-    print("Note: When dumping the ACGT encoded 4-channel QRCode images as numpy arrays," +
-          " we also save 10 samples of how these images would look as an RGB image in sample_rgb_images folder." +
-          " The RGB encoding used: Red (A), Green (C), Blue (G), Orange (T), Black (N/A)")
+    LOGGER.info("Note: When dumping the ACGT encoded 4-channel QRCode images as numpy arrays," +
+                " we also save 10 samples of how these images would look as an RGB image in sample_rgb_images folder." +
+                " The RGB encoding used: Red (A), Green (C), Blue (G), Orange (T), Black (N/A)")
 
     levels = ["phylum", "class", "order"]
 
     for level in levels:
         data = load_train_val_test_data(input_path, level, analyze=False)
-        groupby = lambda l, n: [tuple(l[i:i+n]) for i in range(0, len(l), n)]
+        def groupby(l, n): return [tuple(l[i:i+n]) for i in range(0, len(l), n)]
         for split_name, (sequences, labels) in zip(["train", "val", "test"], groupby(data, 2)):
             sequences_to_rgb_images(sequences, labels, os.path.join(output_path, level, split_name))
 
@@ -117,4 +119,4 @@ if __name__ == '__main__':
     #
     # sequences_to_rgb_images(train_sequences, save_path="./data/hierarchy")
 
-    encode_and_dump("./data/hierarchy", "./data/cnn_qrcode")
+    encode_and_dump("./data/hierarchy", "./data/cnn")

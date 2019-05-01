@@ -9,9 +9,12 @@ from torch.multiprocessing import Pool
 
 from ml.model.cnn.architecture import ConvNet
 from ml.model.cnn.train_eval import cnn_train_eval
+from ml.utils import get_logger
 
 warnings.filterwarnings("ignore")
 torch.set_num_threads(1)
+
+LOGGER = get_logger(None)
 
 
 def generate_search_space_configurations(path_config):
@@ -52,5 +55,5 @@ def run_grid_search_parallel(path_config):
 
 
 if __name__ == '__main__':
-    path_config = {"input_path": "./data/cnn_qrcode/", "plots_path": "./results/cnn_qrcode/plots/", "models_path": "./results/cnn_qrcode/models/", "grid_search_path": "./results/cnn_qrcode/grid_search/"}
+    path_config = {"input_path": "./data/cnn/", "plots_path": "./results/cnn/plots/", "models_path": "./results/cnn/models/", "grid_search_path": "./results/cnn/grid_search/"}
     run_grid_search_parallel(path_config)
