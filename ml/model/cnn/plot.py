@@ -139,7 +139,7 @@ def plot_grid_search_plots(model, title, path_config):
 
 def plot_grid_search(path_config):
     LOGGER.info(
-        "Using precomputed grid search results to plot all 3d-plots of the search space into the path_config['grid_search_results'] ...")
+        "Using precomputed grid search results to plot all 3d-plots of the search space into the path_config['grid_search_results'] ...\n")
     experiment_logs = np.load(os.path.join(
         path_config["grid_search_path"], "grid_search_best_cnn_logs.npy"))
 

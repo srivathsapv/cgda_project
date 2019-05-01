@@ -1,0 +1,62 @@
+digraph {
+	graph [size="12,12"]
+	node [align=left fontsize=12 height=0.2 ranksep=0.1 shape=box style=filled]
+	4673984216 [label=LogSoftmaxBackward fillcolor=darkolivegreen1]
+	4673984552 -> 4673984216
+	4673984552 [label=ThAddmmBackward]
+	4673985168 -> 4673984552
+	4673985168 [label=ExpandBackward]
+	4673985112 -> 4673985168
+	4673985112 [label="fc.bias
+ (5)" fillcolor=lightblue]
+	4673983880 -> 4673984552
+	4673983880 [label=AsStridedBackward]
+	4673985280 -> 4673983880
+	4673985280 [label=MaxPool2DWithIndicesBackward]
+	4673985392 -> 4673985280
+	4673985392 [label=ThresholdBackward0]
+	4673985504 -> 4673985392
+	4673985504 [label=ThnnBatchNormBackward]
+	4673985616 -> 4673985504
+	4673985616 [label=ThnnConv2DBackward]
+	4673985840 -> 4673985616
+	4673985840 [label=MaxPool2DWithIndicesBackward]
+	4673986064 -> 4673985840
+	4673986064 [label=ThresholdBackward0]
+	4673986176 -> 4673986064
+	4673986176 [label=ThnnBatchNormBackward]
+	4673986288 -> 4673986176
+	4673986288 [label=ThnnConv2DBackward]
+	4673986512 -> 4673986288
+	4673986512 [label="Input Image
+ (1, 4, 21, 21)" fillcolor=lightblue]
+	4674031688 -> 4673986288
+	4674031688 [label="layer1.0.weight
+ (16, 4, 5, 5)" fillcolor=lightblue]
+	4674031744 -> 4673986288
+	4674031744 [label="layer1.0.bias
+ (16)" fillcolor=lightblue]
+	4673986344 -> 4673986176
+	4673986344 [label="layer1.1.weight
+ (16)" fillcolor=lightblue]
+	4673986400 -> 4673986176
+	4673986400 [label="layer1.1.bias
+ (16)" fillcolor=lightblue]
+	4673985896 -> 4673985616
+	4673985896 [label="layer2.0.weight
+ (32, 16, 5, 5)" fillcolor=lightblue]
+	4673985952 -> 4673985616
+	4673985952 [label="layer2.0.bias
+ (32)" fillcolor=lightblue]
+	4673985672 -> 4673985504
+	4673985672 [label="layer2.1.weight
+ (32)" fillcolor=lightblue]
+	4673985728 -> 4673985504
+	4673985728 [label="layer2.1.bias
+ (32)" fillcolor=lightblue]
+	4673984664 -> 4673984552
+	4673984664 [label=TBackward]
+	4673985336 -> 4673984664
+	4673985336 [label="fc.weight
+ (5, 800)" fillcolor=lightblue]
+}
