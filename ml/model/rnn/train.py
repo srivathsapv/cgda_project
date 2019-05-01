@@ -12,7 +12,7 @@ import numpy as np
 
 import ml.utils as utils
 
-def train(train_data, valid_data, test_data, model, loss_fun, optimizer, dirpath_results, epochs, device, logger, exp_name):
+def train(train_data, valid_data, test_data, model, loss_fun, optimizer, dirpath_results, parameters, device, logger, use_gpu, exp_name):
 
 
     logdir = dirpath_results
@@ -21,25 +21,36 @@ def train(train_data, valid_data, test_data, model, loss_fun, optimizer, dirpath
         os.makedirs(logdir)
     if not os.path.exists(exp_dir):
         os.makedirs(exp_dir)
-    
-    metrics_file = exp_dir+'/metrics_best.tsv'
-    with open(metrics_file,'w') as fout:
-        for epoch in range(epochs):
-            random.shuffle(train_data)
-            acc, loss = train_one_epoch(train_data[:1000], model, loss_fun, optimizer, device)
-            vacc = inference(valid_data, model, loss_fun, device)
-            tacc = inference(test_data, model, loss_fun, device)
-            print(acc, vacc, tacc, loss, sep='\t', file=fout)
-            logger.info('iter: {}, iter/n_iters: {}%'.format(epoch+1, ((epoch+1) / epochs) * 100))
 
-    state = {'iter_num': epoch+1,
+    metrics = []
+
+    epochs = parameters.epochs
+    batch_size = parameters.batch_size
+    if not use_gpu:
+        batch_size = 10
+        valid_data = valid_data[:10]
+        test_data = test_data[:10]
+        epochs=1
+
+    for epoch in range(epochs):
+        random.shuffle(train_data)
+        acc, loss = train_one_epoch(train_data[:batch_size], model, loss_fun, optimizer, device)
+        vacc = inference(valid_data, model, loss_fun, device)
+        tacc = inference(test_data, model, loss_fun, device)
+        metrics.append([acc, vacc, tacc, loss])
+        logger.info('iter: {}, iter/n_iters: {}%'.format(epoch+1, ((epoch+1) / epochs) * 100))
+
+    if use_gpu:
+        state = {'iter_num': epoch+1,
              'enc_state': model.state_dict(),
              'opt_state': optimizer.state_dict(),
                      }
-    filename = 'bestmodel.pt'
-    save_file = exp_dir + '/' + filename
-    torch.save(state, save_file)
-    logger.info('Saving final model to '+save_file)
+        filename = 'bestmodel.pt'
+        save_file = exp_dir + '/' + filename
+        metrics_file = exp_dir+'/metrics_best.tsv'
+        torch.save(state, save_file)
+        write_metrics(metrics, metrics_file)
+        logger.info('Saving final model to '+save_file)
 
 
 def train_one_epoch(train_data, model, loss_fun, optimizer, device):
@@ -138,3 +149,8 @@ def prep_single_label(label, device):
     gold.append(label)
     return torch.tensor(gold, dtype=torch.long, device=device)
 
+def write_metrics(metrics, metrics_file):
+
+    with open(metrics_file, 'w') as fout:
+        for m in metrics:
+            print(m[0], m[1], m[2], m[4], sep='\t', file=fout)

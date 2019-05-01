@@ -4,7 +4,7 @@ class Parameters:
         self.vocab_size = 4
         self.embedding_dim = 50
         self.hidden_dim = 50
-        self.batch_size=1
+        self.batch_size=1000
         if classifier_type=='phylum':
             self.epochs=50
             self.label_size=3
