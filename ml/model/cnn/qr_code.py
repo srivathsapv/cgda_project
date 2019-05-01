@@ -4,6 +4,7 @@ import warnings
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
+from tqdm import tqdm
 
 from ml.model.cnn.data_loader import load_train_val_test_data
 from ml.utils import get_logger
@@ -93,13 +94,14 @@ def sequences_to_rgb_images(sequences, labels, save_path):
 
 
 def encode_and_dump(input_path, output_path):
+    LOGGER.info("Extracting QRCode Features from DNA Sequences...")
     LOGGER.info("Note: When dumping the ACGT encoded 4-channel QRCode images as numpy arrays," +
                 " we also save 10 samples of how these images would look as an RGB image in sample_rgb_images folder." +
                 " The RGB encoding used: Red (A), Green (C), Blue (G), Orange (T), Black (N/A)")
 
     levels = ["phylum", "class", "order"]
 
-    for level in levels:
+    for level in tqdm(levels, total=len(levels)):
         data = load_train_val_test_data(input_path, level, analyze=False)
         def groupby(l, n): return [tuple(l[i:i+n])
                                    for i in range(0, len(l), n)]

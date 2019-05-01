@@ -3,7 +3,7 @@ import time
 import warnings
 
 import numpy as np
-import progressbar
+from tqdm import tqdm
 import torch
 import torch.backends.cudnn as cudnn
 import torch.nn.functional as F
@@ -39,9 +39,7 @@ def cnn_train_model(model, train_loader, test_loader, optimizer, config):
     acc_train = np.zeros((EPOCH,))
     time_test = np.zeros((EPOCH,))
 
-    bar = progressbar.ProgressBar(min_value=1, max_value=EPOCH)
-    for epoch in range(EPOCH):
-        bar.update(epoch+1)
+    for epoch in tqdm(range(EPOCH), total=EPOCH):
 
         # train 1 epoch
         model.train()
