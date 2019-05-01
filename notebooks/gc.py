@@ -33,7 +33,7 @@ def read_data_from_csv(path):
 
 
 def load_train_val_test_data(level, analyze=True):
-    data_base_path = "./hierarchy/" + level
+    data_base_path = "./data/hierarchy/" + level
     train_sequences, train_labels = read_data_from_csv(os.path.join(data_base_path, "train.csv"))
     val_sequences, val_labels = read_data_from_csv(os.path.join(data_base_path, "val.csv"))
     test_sequences, test_labels = read_data_from_csv(os.path.join(data_base_path, "test.csv"))
