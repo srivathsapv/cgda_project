@@ -12,22 +12,8 @@ import glob
 import os
 import numpy as np
 
-from ml.model.rnn.model import LSTMClassifier
 
-device = torch.device("cpu")
-
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s %(levelname)s %(message)s')
-
-EMBEDDING_DIM = 50
-HIDDEN_DIM = 50
-VOCAB_SIZE = 4
-LABEL_SIZE = 19
-BATCH_SIZE = 1
-EPOCHS = 50
-
-
-def evaluate(train_data, valid_data, test_data, model, dirpath_results, device, logger, exp_name):
+def evaluate(test_data, model, dirpath_results, parameters, device, logger, exp_name):
 
 
     logdir = dirpath_results
@@ -49,8 +35,8 @@ def evaluate(train_data, valid_data, test_data, model, dirpath_results, device, 
     if state is not None:
         model.load_state_dict(state['enc_state'])
 
-    tacc,label_weights = inference(test_data, model, device)
-    print(tacc)
+    acc,label_weights = inference(test_data, model, device)
+    logger.info('Test accuracy: {}'.format(acc))
     
     '''
     print(np.shape(label_weights))
@@ -131,14 +117,3 @@ def prep_single_label(label, device):
     gold = []
     gold.append(label)
     return torch.tensor(gold, dtype=torch.long, device=device)
-
-
-
-
-train_data = load_data('hierarchy/order/train.csv')
-valid_data = load_data('hierarchy/order/val.csv')
-test_data = load_data('hierarchy/order/test.csv')
-
-
-model = LSTMClassifier(EMBEDDING_DIM, HIDDEN_DIM, VOCAB_SIZE, LABEL_SIZE, BATCH_SIZE).to(device)
-train(train_data, valid_data, test_data, model)
