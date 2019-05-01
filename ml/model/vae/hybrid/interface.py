@@ -104,9 +104,8 @@ def train_model(path_config, verbose=True, args=None):
                 min_vae_dict = vae.state_dict()
                 min_ce = valid_ce
                 logger.info('Saving best model in iteration {}'.format(iteration))
-                t.save(vae.state_dict(), '{}/kmer-best.pth'.format(dirpath_results))
+                t.save(vae.state_dict(), '{}/{}_best.pth'.format(dirpath_results, args.model_name))
 
-    fname = batch_loader.data_path.split('/')[-1].split('.')[0]
     logger.info('Saving final metrics')
     df_metrics = pd.DataFrame(metrics)
-    df_metrics.to_csv('{}/metrics_{}.csv'.format(dirpath_results, fname))
+    df_metrics.to_csv('{}/{}_metrics.csv'.format(dirpath_results, args.model_name))
