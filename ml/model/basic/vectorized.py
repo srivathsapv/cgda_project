@@ -45,7 +45,6 @@ def train_basic(dirpath_vector, dirpath_output, verbose=True):
 	x_train = np.genfromtxt(dirpath_vector + '/phylum/train.csv',delimiter='\n',dtype=None,encoding=None)
 	x_test = np.genfromtxt(dirpath_vector + '/phylum/test.csv',delimiter='\n',dtype=None,encoding=None)
 	x_val = np.genfromtxt(dirpath_vector + '/phylum/val.csv',delimiter='\n',dtype=None,encoding=None)
-	#x_feature = np.genfromtxt(results.feature,delimiter=',',dtype=None,encoding=None)
 	arr = []
 	arr1 = []
 	arr2 = []
@@ -98,11 +97,8 @@ def train_basic(dirpath_vector, dirpath_output, verbose=True):
 	hf = h5py.File(dirpath_vector + '/phylum/ordinal.h5', 'w')
 
 	hf.create_dataset('dataset_1', data=final1)
-	# print("train done")
 	hf.create_dataset('dataset_2', data=final2)
-	# print("test done")
 	hf.create_dataset('dataset_3', data=final3)
-	# print("val done")
 
 	hf.close()
 
@@ -114,7 +110,6 @@ def train_basic(dirpath_vector, dirpath_output, verbose=True):
 	x_train = np.genfromtxt(dirpath_vector + '/class/train.csv',delimiter='\n',dtype=None,encoding=None)
 	x_test = np.genfromtxt(dirpath_vector + '/class/test.csv',delimiter='\n',dtype=None,encoding=None)
 	x_val = np.genfromtxt(dirpath_vector + '/class/val.csv',delimiter='\n',dtype=None,encoding=None)
-	#x_feature = np.genfromtxt(results.feature,delimiter=',',dtype=None,encoding=None)
 	arr = []
 	arr1 = []
 	arr2 = []
@@ -167,11 +162,8 @@ def train_basic(dirpath_vector, dirpath_output, verbose=True):
 	hf = h5py.File(dirpath_vector + '/class/ordinal.h5', 'w')
 
 	hf.create_dataset('dataset_1', data=final1)
-	# print("train done")
 	hf.create_dataset('dataset_2', data=final2)
-	# print("test done")
 	hf.create_dataset('dataset_3', data=final3)
-	# print("val done")
 
 	hf.close()
 
@@ -185,7 +177,6 @@ def train_basic(dirpath_vector, dirpath_output, verbose=True):
 	Y = np.array(n2)
 	V = np.array(n3)
 	hf.close()
-	# x_train = np.genfromtxt(results.train,delimiter='\t',dtype=None,encoding=None)
 	lab = np.genfromtxt(dirpath_vector + '/phylum/train.csv',delimiter='\n',dtype=None,encoding=None)
 	lab1 = np.genfromtxt(dirpath_vector + '/phylum/test.csv',delimiter='\n',dtype=None,encoding=None)
 	lab2 = np.genfromtxt(dirpath_vector + '/phylum/val.csv',delimiter='\n',dtype=None,encoding=None)
@@ -193,8 +184,6 @@ def train_basic(dirpath_vector, dirpath_output, verbose=True):
 	labels = []
 	i = 0
 	for item in lab[1:]:
-		# print(item)
-		# print(type(item))
 		if item.split(",")[0][0] == "A":
 			labels.append(0)
 		elif item.split(",")[0][0] == "F":
@@ -203,12 +192,9 @@ def train_basic(dirpath_vector, dirpath_output, verbose=True):
 			labels.append(2)
 		i+=1
 
-	# labels1 = np.zeros((lab1.shape[0]-1,1))
 	labels1 = []
 	i = 0
 	for item in lab1[1:]:
-		# print(item)
-		# print(type(item))
 		if item.split(",")[0][0] == "A":
 			labels1.append(0)
 		elif item.split(",")[0][0] == "F":
@@ -217,12 +203,9 @@ def train_basic(dirpath_vector, dirpath_output, verbose=True):
 			labels1.append(2)
 		i+=1
 
-	# labels2 = np.zeros((lab2.shape[0]-1,1))
 	labels2 = []
 	i = 0
 	for item in lab2[1:]:
-		# print(item)
-		# print(type(item))
 		if item.split(",")[0][0] == "A":
 			labels2.append(0)
 		elif item.split(",")[0][0] == "F":
@@ -248,10 +231,8 @@ def train_basic(dirpath_vector, dirpath_output, verbose=True):
 	scores = clf2.decision_function(X)
 	scores2 = clf.predict(X)
 
-	# print (scores)
-	score = np.amax(scores, axis = 1) 
-	# score2 = np.amax(scores2, axis = 1)
-	# print (score)
+
+	score = np.amax(scores, axis = 1)
 
 	fpr, tpr, thresholds = roc_curve(label, score, pos_label=2)
 	fpr2, tpr2, thresholds2 = roc_curve(label, scores2, pos_label=2)
