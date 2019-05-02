@@ -4,6 +4,8 @@ from sklearn.ensemble import RandomForestClassifier
 from ml.model.basic.kmer import train_basic as kmer_train_basic
 from ml.model.basic.kmer import plot_kmer_metrics
 from ml.model.basic.vectorized import train_basic as vector_train_basic
+from ml.model.basic.test_vectorized import test_basic as vector_test_basic
+from ml.model.basic.test_onehot import test_basic as onehot_test_basic
 from ml.model.basic.onehot import train_basic as onehot_train_basic
 import ml.utils as utils
 
@@ -46,9 +48,11 @@ def test_model(path_config, args=None):
     if args.model_name == 'basic_kmer':
         plot_kmer_metrics(path_config, args)
     elif args.model_name == 'basic_vector':
-        pass
+        path_config = path_config['basic_vector']
+        vector_test_basic(path_config['dirpath_vector'], path_config['results'])
     elif args.model_name == 'basic_onehot':
-        pass
+        path_config = path_config['basic_onehot']
+        onehot_test_basic(path_config['dirpath_onehot'],path_config['results'])
     else:
         raise ValueError(
             'Basic ML model {} not supported'.format(args.model_name))
