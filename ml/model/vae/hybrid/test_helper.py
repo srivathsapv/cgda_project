@@ -2,6 +2,7 @@ import os
 import numpy as np
 import torch as t
 import pandas as pd
+from multiprocessing import cpu_count
 
 from sklearn.decomposition import PCA
 from MulticoreTSNE import MulticoreTSNE as TSNE
@@ -115,7 +116,7 @@ def save_embed_plots(fpath_data, embeddings, dirpath_results, model_name):
             'info_msg': 'Saved PCA plot in {path}'
         },
         {
-            'model': TSNE(n_components=3, n_jobs=8, verbose=1, n_iter=250),
+            'model': TSNE(n_components=3, n_jobs=cpu_count()-1, verbose=1, n_iter=250),
             'fpath_plot': '{}/{}_tsne_plot.png'.format(dirpath_results, model_name),
             'xlabel': 't-SNE 1',
             'ylabel': 't-SNE 2',
