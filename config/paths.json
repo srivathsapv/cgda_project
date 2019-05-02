@@ -45,5 +45,23 @@
         "models_path": "results/cnn/models/",
         "grid_search_path": "results/cnn/grid_search/",
         "activations_path": "results/cnn/activations/"
+    },
+    "rnn": {
+        "phylum": {
+            "train": "data/hierarchy/phylum/train.csv",
+            "val": "data/hierarchy/phylum/val.csv",
+            "test": "data/hierarchy/phylum/test.csv"
+        },
+        "class": {
+            "train": "data/hierarchy/class/train.csv",
+            "val": "data/hierarchy/class/val.csv",
+            "test": "data/hierarchy/class/test.csv"
+        },
+        "order": {
+            "train": "data/hierarchy/order/train.csv",
+            "val": "data/hierarchy/order/val.csv",
+            "test": "data/hierarchy/order/test.csv"
+        },
+        "dirpath_rnn": "results/rnn"
     }
 }
