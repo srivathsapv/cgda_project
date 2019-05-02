@@ -1,5 +1,11 @@
 # Computational Genomics Final Project - Spring 2019
 
+## Team Members
+1. Ayush Agarwal (aagarw33)
+2. Lohita Sivaprakasam (lsivapr1)
+3. Satish Palaniappan (spalani2)
+4. Srivathsa Pasumarthi (psrivat1)
+
 ## Steps to Run the code
 
 1. Set the python path to the root directory of the project folder.
