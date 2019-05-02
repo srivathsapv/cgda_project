@@ -36,7 +36,7 @@ def train_kmer_combined(model, level, train_data,
     return float(f1), pred_val
 
 
-def train_basic(models, dirpath_kmer, dirpath_output, kmin, kmax):
+def train_basic(models, dirpath_kmer, dirpath_output, kmin, kmax, is_demo):
     logger = utils.get_logger()
 
     for model in models:
@@ -64,22 +64,22 @@ def train_basic(models, dirpath_kmer, dirpath_output, kmin, kmax):
                     model_str, level, k, train_f1))
                 np.save('{}/{}_preds_{}_{}mer.npy'.format(dirpath_output,
                                                           model_str, level, k), pred_val)
+            if not is_demo:
+                combined_train_data = np.hstack(combined_train_data)
+                combined_val_data = np.hstack(combined_val_data)
 
-            combined_train_data = np.hstack(combined_train_data)
-            combined_val_data = np.hstack(combined_val_data)
+                train_labels = df_train['label'].values.astype(np.int8)
+                val_labels = df_val['label'].values.astype(np.int8)
 
-            train_labels = df_train['label'].values.astype(np.int8)
-            val_labels = df_val['label'].values.astype(np.int8)
+                combined_f1, combined_pred = train_kmer_combined(
+                    model, level, combined_train_data, train_labels,
+                    combined_val_data, val_labels
+                )
 
-            combined_f1, combined_pred = train_kmer_combined(
-                model, level, combined_train_data, train_labels,
-                combined_val_data, val_labels
-            )
-
-            logger.info(('Train F1 Score for {} model for {} level and ' +
-                         'combined K from 1-5 is {:.3f}').format(model_str, level, combined_f1))
-            np.save('{}/{}_preds_{}_combined.npy'.format(dirpath_output,
-                                                         model_str, level), combined_pred)
+                logger.info(('Train F1 Score for {} model for {} level and ' +
+                             'combined K from 1-5 is {:.3f}').format(model_str, level, combined_f1))
+                np.save('{}/{}_preds_{}_combined.npy'.format(dirpath_output,
+                                                             model_str, level), combined_pred)
 
 def plot_kmer_metrics(path_config, args):
     logger = utils.get_logger()
@@ -109,7 +109,7 @@ def plot_kmer_metrics(path_config, args):
                 model_scores[level].append(f1_score(gt_y, pred_y, average='macro'))
             pred_y = np.load('{}/{}_preds_{}_combined.npy'.format(dirpath_results, model, level))
             model_scores[level].append(f1_score(gt_y, pred_y, average='macro'))
-            
+
             plt.plot(range(1, 8), model_scores[level], label=level, color=COLORS[i])
 
         fpath_plot = '{}/{}_kmer.png'.format(dirpath_results, model)

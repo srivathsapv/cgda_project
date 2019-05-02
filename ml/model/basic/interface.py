@@ -14,6 +14,7 @@ RUN_OPTIONS = ['basic_kmer', 'basic_vector', 'basic_onehot']
 
 def train_model(path_config, args=None):
     if args.model_name == 'basic_kmer':
+        logger = utils.get_logger()
         path_config = path_config['basic_kmer']
         kmer_config = utils.get_model_hyperparams('basic_kmer')
 
@@ -22,10 +23,15 @@ def train_model(path_config, args=None):
             RandomForestClassifier(**kmer_config['random_forest'])
         ]
 
+        if args.is_demo:
+            logger.info('WARNING! Running in Demo Mode. Because of the fact that SVM is taking a long time, ' +
+                        'training will be run only for k=1 to 4. Training for combined data will not be run.')
+            kmer_config['kmax'] = 4
+
         kmer_train_basic(
             models, dirpath_kmer=path_config['dirpath_kmer'],
             dirpath_output=path_config['results'], kmin=kmer_config['kmin'],
-            kmax=kmer_config['kmax']
+            kmax=kmer_config['kmax'], is_demo=args.is_demo
         )
     elif args.model_name == 'basic_vector':
         path_config = path_config['basic_vector']
