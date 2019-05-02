@@ -8,9 +8,13 @@
 
 ## Steps to Run the code
 
+**Important Note**: As required by the project description, we do not have a `run.sh` file as we have many modes of running our
+train and test scripts. Hence we have given detailed steps to run our code. If you want to have a look at the hyperparameter
+configuration for all our models, you can find it in `config/hyperparams.json`
+
 1. Set the python path to the root directory of the project folder.
 ```
-export PYTHONPATH=<root path of project folder>
+export PYTHONPATH=$PYTHONPATH:<root_path_of_project_folder>
 ```
 
 2. Install `graphviz` using the following command
