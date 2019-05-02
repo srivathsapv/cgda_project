@@ -167,16 +167,19 @@ def train_best_cnn_models(cnn_config, path_config,
         save_model = False
         is_plot = False
 
+    LOGGER.info("Phylum-level CNN Classifier Training ...")
     cnn_train_eval("phylum", ConvNet(3), path_config, eval_on="val",
                    cnn_config=cnn_config["phylum"], is_plot=is_plot, save_model=False)
     cnn_train_eval("phylum", ConvNet(3), path_config, eval_on="test",
                    cnn_config=cnn_config["phylum"], is_plot=is_plot, save_model=save_model)
 
+    LOGGER.info("Class-level CNN Classifier Training ...")
     cnn_train_eval("class", ConvNet(5), path_config, eval_on="val",
                    cnn_config=cnn_config["class"], is_plot=is_plot, save_model=False)
     cnn_train_eval("class", ConvNet(5), path_config, eval_on="test",
                    cnn_config=cnn_config["class"], is_plot=is_plot, save_model=save_model)
 
+    LOGGER.info("Order-level CNN Classifier Training ...")
     cnn_train_eval("order", ConvNet(10), path_config, eval_on="val",
                    cnn_config=cnn_config["order"], is_plot=is_plot, save_model=False)
     cnn_train_eval("order", ConvNet(10), path_config, eval_on="test",
