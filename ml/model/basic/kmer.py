@@ -109,7 +109,7 @@ def plot_kmer_metrics(path_config, args):
                 model_scores[level].append(f1_score(gt_y, pred_y, average='macro'))
             pred_y = np.load('{}/{}_preds_{}_combined.npy'.format(dirpath_results, model, level))
             model_scores[level].append(f1_score(gt_y, pred_y, average='macro'))
-
+            
             plt.plot(range(1, 8), model_scores[level], label=level, color=COLORS[i])
 
         fpath_plot = '{}/{}_kmer.png'.format(dirpath_results, model)

@@ -120,7 +120,7 @@ def save_embed_plots(fpath_data, embeddings, dirpath_results, model_name):
             'fpath_plot': '{}/{}_tsne_plot.png'.format(dirpath_results, model_name),
             'xlabel': 't-SNE 1',
             'ylabel': 't-SNE 2',
-            'title': 'TCA of phylum embeddings for {} model'.format(model_name),
+            'title': 't-SNE of phylum embeddings for {} model'.format(model_name),
             'info_msg': 'Saved TSNE plot in {path}'
         }
     ]
