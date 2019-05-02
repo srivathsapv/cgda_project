@@ -42,10 +42,10 @@ Once preprocess is run, the data will be generated in the `data` folder.
 
 
 ```
-python3 train_model.py --model-name <name of the model> --is-demo
+python3 train_model.py --model-name <name_of_the_model> --is-demo
 ```
 
-where `<name of the model>` can be one of the following
+where `<name_of_the_model>` can be one of the following
 ```
 'basic_kmer', 'basic_vector', 'basic_onehot', 'cnn_qrcode', 'rnn', 'lstm_vae_ordinal', 'lstm_vae_kmer_4', 'lstm_vae_kmer_5',
 'hybrid_vae_ordinal', 'hybrid_vae_kmer_4', 'hybrid_vae_kmer_5'
@@ -69,10 +69,10 @@ python3 train_model.py --model-name cnn_qrcode
 6. Run the model testing script
 
 ```
-python3 test_model.py --model-name <name of the model>
+python3 test_model.py --model-name <name_of_the_model>
 ```
 
-where `<name of the model>` can be one from the above list. Accuracy metrics and progress will be displayed while the results
+where `<name_of_the_model>` can be one from the above list. Accuracy metrics and progress will be displayed while the results
 will be stored according to the model in the `results` folder. Explore and enjoy! :)
 
 Example:
