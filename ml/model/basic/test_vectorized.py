@@ -269,9 +269,9 @@ def test_basic(dirpath_vector, dirpath_output, verbose=True):
 
     C = confusion_matrix(label1, preds2)
 
-    logger.info('Train Accuracy, precision, recall and F1 Score for SVM model for phylum level is {:.3f}, {:.3f}, {:.3f}, {:.3f}'.format(
+    logger.info('Test Accuracy, precision, recall and F1 Score for SVM model for phylum level is {:.3f}, {:.3f}, {:.3f}, {:.3f}'.format(
         accuracy2, p, r, f1))
-    logger.info('Train Accuracy, precision, recall and F1 Score for Random Forest model for phylum level is {:.3f}, {:.3f}, {:.3f}, {:.3f}'.format(
+    logger.info('Test Accuracy, precision, recall and F1 Score for Random Forest model for phylum level is {:.3f}, {:.3f}, {:.3f}, {:.3f}'.format(
         accuracy, p2, r2, f12))
 
     hf = h5py.File(dirpath_vector + '/class/ordinal.h5', 'r')
@@ -358,7 +358,7 @@ def test_basic(dirpath_vector, dirpath_output, verbose=True):
     p2, r2, f12, s = precision_recall_fscore_support(
         label1, preds, average='weighted')
 
-    logger.info('Test Accuracy, precision, recall and F1 Score for SVM model for phylum level is {:.3f}, {:.3f}, {:.3f}, {:.3f}'.format(
+    logger.info('Test Accuracy, precision, recall and F1 Score for SVM model for class level is {:.3f}, {:.3f}, {:.3f}, {:.3f}'.format(
         accuracy, p2, r2, f12))
-    logger.info('Test Accuracy, precision, recall and F1 Score for Random Forest model for phylum level is {:.3f}, {:.3f}, {:.3f}, {:.3f}'.format(
+    logger.info('Test Accuracy, precision, recall and F1 Score for Random Forest model for class level is {:.3f}, {:.3f}, {:.3f}, {:.3f}'.format(
         accuracy2, p, r, f1))
