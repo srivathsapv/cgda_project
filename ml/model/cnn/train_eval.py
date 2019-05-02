@@ -136,15 +136,18 @@ def plot_archs(path_config):
     for model, level in zip(models, ["phylum", "class", "order"]):
         x = torch.zeros(1, 4, 21, 21, dtype=torch.float, requires_grad=True)
         out = model(x)
-        dot = make_dot(out, params=dict(list(model.named_parameters()) + [('Input Image', x)]))
+        dot = make_dot(out, params=dict(
+            list(model.named_parameters()) + [('Input Image', x)]))
 
         dot.format = 'png'
-        dot.render(os.path.join(path_config["models_path"], level+"_model_cnn_arch"))
+        dot.render(os.path.join(
+            path_config["models_path"], level+"_model_cnn_arch"))
 
 
 def train_best_cnn_models(cnn_config, path_config,
                           is_demo=False, save_model=True, is_plot=True):
-    LOGGER.info("Visualizations of the CNN architectures have been saved to: path_config['models_path']\n")
+    LOGGER.info(
+        "Visualizations of the CNN architectures have been saved to: path_config['models_path']\n")
     plot_archs(path_config)
 
     LOGGER.info(

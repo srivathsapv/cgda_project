@@ -1,3 +1,7 @@
+from ml.model.vae.hybrid.vae import VAE
+from ml.model.vae.hybrid.parameters import Parameters
+from ml.model.vae.hybrid.batchloader import BatchLoader
+import ml.utils as utils
 import os
 import numpy as np
 import torch as t
@@ -9,13 +13,10 @@ from MulticoreTSNE import MulticoreTSNE as TSNE
 import matplotlib.pyplot as plt
 plt.style.use('seaborn')
 
-import ml.utils as utils
-from ml.model.vae.hybrid.batchloader import BatchLoader
-from ml.model.vae.hybrid.parameters import Parameters
-from ml.model.vae.hybrid.vae import VAE
 
 COLORS = ['tab:blue', 'tab:brown', 'tab:green', 'tab:red', 'tab:purple',
           'tab:orange', 'tab:pink', 'black', 'tab:olive', 'tab:cyan']
+
 
 def test_vae(path_config, feature_type, hyperparams, model_name):
     is_kmer = ('kmer' in feature_type)
@@ -34,11 +35,13 @@ def test_vae(path_config, feature_type, hyperparams, model_name):
 
     save_embed_plots(fpath_data, embeddings, dirpath_results, model_name)
 
+
 def get_embeddings(fpath_data, is_kmer, feature_type, use_gpu, dirpath_results,
-                    model_name):
+                   model_name):
 
     logger = utils.get_logger()
-    logger.info('Running inference and obtaining embeddings for {}'.format(feature_type))
+    logger.info(
+        'Running inference and obtaining embeddings for {}'.format(feature_type))
 
     if is_kmer:
         kval = int(feature_type.split('_')[1])
@@ -56,10 +59,12 @@ def get_embeddings(fpath_data, is_kmer, feature_type, use_gpu, dirpath_results,
     if use_gpu:
         vae = vae.cuda()
 
-    vae.load_state_dict(t.load('{}/{}_best.pth'.format(dirpath_results, model_name)))
+    vae.load_state_dict(
+        t.load('{}/{}_best.pth'.format(dirpath_results, model_name)))
 
     batch_size = 5000
-    batch_indices = [i for i in np.arange(start=batch_size, stop=len(features), step=batch_size)]
+    batch_indices = [i for i in np.arange(
+        start=batch_size, stop=len(features), step=batch_size)]
     feature_batches = np.split(features, batch_indices)
 
     embeddings = []
@@ -67,18 +72,22 @@ def get_embeddings(fpath_data, is_kmer, feature_type, use_gpu, dirpath_results,
     for feature_batch in feature_batches:
         if not is_kmer:
             idxs = [batch_loader._get_idxs(seq) for seq in feature_batch]
-            encoder_input, _, _ = batch_loader._wrap_tensor(idxs, use_cuda=use_gpu)
+            encoder_input, _, _ = batch_loader._wrap_tensor(
+                idxs, use_cuda=use_gpu)
         else:
-            encoder_input, _, _ = batch_loader._wrap_tensor(feature_batch, use_cuda=use_gpu)
+            encoder_input, _, _ = batch_loader._wrap_tensor(
+                feature_batch, use_cuda=use_gpu)
         mu, _ = vae.inference(encoder_input)
         embeddings.extend(mu.data.cpu().numpy())
 
     embeddings = np.array(embeddings)
     return embeddings
 
+
 def save_loss_curve(dirpath_results, model_name):
     logger = utils.get_logger()
-    df_metrics = pd.read_csv('{}/{}_metrics.csv'.format(dirpath_results, model_name), index_col=0)
+    df_metrics = pd.read_csv(
+        '{}/{}_metrics.csv'.format(dirpath_results, model_name), index_col=0)
     fpath_plot = '{}/{}_loss.png'.format(dirpath_results, model_name)
 
     train_ces = df_metrics['train_ce'].values
@@ -139,7 +148,8 @@ def embed_and_plot(df_data, embeddings, embed_config):
     fpath_plot = embed_config['fpath_plot']
 
     for phy_idx in phy_indices:
-        data_indices = np.where(df_data['phylum'].values == phy_labels[phy_idx])
+        data_indices = np.where(
+            df_data['phylum'].values == phy_labels[phy_idx])
         data_pts = embed_data[data_indices]
         plt.scatter(
             data_pts[:, 0], data_pts[:, 1], color=COLORS[phy_idx],

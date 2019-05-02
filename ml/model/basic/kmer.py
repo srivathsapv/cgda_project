@@ -1,13 +1,14 @@
+import ml.utils as utils
 import numpy as np
 import pandas as pd
 from sklearn.metrics import f1_score
 import matplotlib.pyplot as plt
 plt.style.use('seaborn')
 
-import ml.utils as utils
 
 COLORS = ['tab:blue', 'tab:brown', 'tab:green', 'tab:red', 'tab:purple',
           'tab:orange', 'tab:pink', 'black', 'tab:olive', 'tab:cyan']
+
 
 def train_kmer_for_level(model, level, k, df_train, df_val):
     trainX = df_train.values[:, :-2].astype(np.float16)
@@ -81,6 +82,7 @@ def train_basic(models, dirpath_kmer, dirpath_output, kmin, kmax, is_demo):
                 np.save('{}/{}_preds_{}_combined.npy'.format(dirpath_output,
                                                              model_str, level), combined_pred)
 
+
 def plot_kmer_metrics(path_config, args):
     logger = utils.get_logger()
 
@@ -101,16 +103,21 @@ def plot_kmer_metrics(path_config, args):
         model_scores = {}
         for i, level in enumerate(['phylum', 'class', 'order']):
             model_scores[level] = []
-            df_data = pd.read_csv('{}/{}/val_1mer.csv'.format(dirpath_kmer, level))
+            df_data = pd.read_csv(
+                '{}/{}/val_1mer.csv'.format(dirpath_kmer, level))
             gt_y = df_data['label'].values.astype(np.int8)
 
             for k in range(1, 7):
-                pred_y = np.load('{}/{}_preds_{}_{}mer.npy'.format(dirpath_results, model, level, k))
-                model_scores[level].append(f1_score(gt_y, pred_y, average='macro'))
-            pred_y = np.load('{}/{}_preds_{}_combined.npy'.format(dirpath_results, model, level))
+                pred_y = np.load(
+                    '{}/{}_preds_{}_{}mer.npy'.format(dirpath_results, model, level, k))
+                model_scores[level].append(
+                    f1_score(gt_y, pred_y, average='macro'))
+            pred_y = np.load(
+                '{}/{}_preds_{}_combined.npy'.format(dirpath_results, model, level))
             model_scores[level].append(f1_score(gt_y, pred_y, average='macro'))
 
-            plt.plot(range(1, 8), model_scores[level], label=level, color=COLORS[i])
+            plt.plot(
+                range(1, 8), model_scores[level], label=level, color=COLORS[i])
 
         fpath_plot = '{}/{}_kmer.png'.format(dirpath_results, model)
         plt.xticks(range(1, 8), xticks)
@@ -119,5 +126,6 @@ def plot_kmer_metrics(path_config, args):
         plt.title('F1 Metrics for {}'.format(model_display[model]))
         plt.legend()
         plt.savefig(fpath_plot)
-        logger.info('Saving K-Mer comparison plot for {} in {}'.format(model_display[model], fpath_plot))
+        logger.info(
+            'Saving K-Mer comparison plot for {} in {}'.format(model_display[model], fpath_plot))
         plt.clf()

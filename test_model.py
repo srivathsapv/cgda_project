@@ -52,9 +52,11 @@ def test():
 
     interface = get_interface_module(args.model_name)
     if not hasattr(interface, 'test_model'):
-        raise AttributeError('Model testing for {} not implemented'.format(args.model_name))
+        raise AttributeError(
+            'Model testing for {} not implemented'.format(args.model_name))
 
     interface.test_model(path_config, args=args)
+
 
 if __name__ == '__main__':
     test()

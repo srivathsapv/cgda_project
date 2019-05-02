@@ -49,7 +49,8 @@ def get_positive_negative_saliency(gradient):
 
 
 def load_data_for_activations_viz(level, path_config, num_samples_per_class=10):
-    test_data, test_labels = load_data_from_dump(level, path_config["input_path"])[-1]
+    test_data, test_labels = load_data_from_dump(
+        level, path_config["input_path"])[-1]
     test_label_names = load_train_val_test_data(
         path_config["hierarchy_path"], level, analyze=False, return_label_names=True)[-1]
 
@@ -133,14 +134,18 @@ def viz_activations_for(level, path_config, num_samples_per_class=25):
     category_wise_data, categories = load_data_for_activations_viz(
         level, path_config, num_samples_per_class)
     for c in tqdm(categories, total=len(categories)):
-        plot_activation_maps(level, c, categories[c], category_wise_data[c], path_config)
+        plot_activation_maps(
+            level, c, categories[c], category_wise_data[c], path_config)
 
 
 def viz_activations_for_all(path_config):
-    LOGGER.info("Visualizing the First Convolution Layer of the CNN using GuidedBackprop ...")
-    LOGGER.info("Loading the pre-trained model from: path_config['models_path'] and saving the activation maps to: path_config['activations_path']\n")
+    LOGGER.info(
+        "Visualizing the First Convolution Layer of the CNN using GuidedBackprop ...")
+    LOGGER.info(
+        "Loading the pre-trained model from: path_config['models_path'] and saving the activation maps to: path_config['activations_path']\n")
     for level in ["phylum", "class", "order"]:
-        LOGGER.info("Generating and saving visualizations at a " + level + "-level ...")
+        LOGGER.info("Generating and saving visualizations at a " +
+                    level + "-level ...")
         viz_activations_for(level, path_config)
 
 

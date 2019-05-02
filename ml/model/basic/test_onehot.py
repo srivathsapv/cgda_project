@@ -262,11 +262,10 @@ def test_basic(dirpath_vector, dirpath_output):
     pred_phylum_svm = np.load(dirpath_output + '/SVM_phylum_predictions.npy')
     pred_phylum_rf = np.load(dirpath_output + '/RF_phylum_predictions.npy')
     scores_phylum_svm = np.load(dirpath_output + '/SVM_phylum_scores.npy')
-    scores_phylum_rf = np.load(dirpath_output + '/RF_phylum_scores.npy') 
+    scores_phylum_rf = np.load(dirpath_output + '/RF_phylum_scores.npy')
 
     fpr, tpr, thresholds = roc_curve(label1, scores_phylum_svm, pos_label=2)
     fpr2, tpr2, thresholds2 = roc_curve(label1, scores_phylum_rf, pos_label=2)
-
 
     roc_auc = auc(fpr, tpr)
     roc_auc2 = auc(fpr2, tpr2)
@@ -281,7 +280,6 @@ def test_basic(dirpath_vector, dirpath_output):
     if not os.path.exists(dirpath_output):
         os.makedirs(dirpath_output)
     plt.savefig(dirpath_output + "/" + "ROC_Phylum")
-
 
     match2 = 0
     for i in range(pred_phylum_svm.shape[0]):
@@ -393,7 +391,6 @@ def test_basic(dirpath_vector, dirpath_output):
     if not os.path.exists(dirpath_output):
         os.makedirs(dirpath_output)
     plt.savefig(dirpath_output + "/" + "ROC_Class")
-
 
     match2 = 0
     for i in range(pred_class_svm.shape[0]):

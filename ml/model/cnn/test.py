@@ -41,7 +41,8 @@ def cnn_test(model, test_loader, config):
 
 
 def cnn_test_model(level, path_config, cnn_config={"batch_size": 32, "device": "cpu"}):
-    (_, _), (_, _), (test_images, test_labels) = load_data_from_dump(level, path_config["input_path"])
+    (_, _), (_, _), (test_images, test_labels) = load_data_from_dump(
+        level, path_config["input_path"])
 
     model = load_pretrained_model(level, path_config)
     eval_loader = create_pytorch_datasets(test_images, test_labels, cnn_config)

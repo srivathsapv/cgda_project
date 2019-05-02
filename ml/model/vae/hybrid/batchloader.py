@@ -88,7 +88,6 @@ class BatchLoader:
     def _get_idxs(self, string):
         return [self.char_to_idx[chr] for chr in string]
 
-    
     def _wrap_tensor(self, input, use_cuda: bool):
         """
         :param input: An list of batch size len filled with lists of input indexes

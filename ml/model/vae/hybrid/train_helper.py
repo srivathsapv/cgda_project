@@ -11,6 +11,7 @@ from ml.model.vae.hybrid.batchloader import BatchLoader
 from ml.model.vae.hybrid.parameters import Parameters
 from ml.model.vae.hybrid.vae import VAE
 
+
 def get_metrics_dict(ce, aux_ce, kld, val_ce, val_aux_ce, val_kld, batch_size):
     train_ce = ce.data.cpu().numpy() / (1024 * batch_size)
     train_aux_ce = aux_ce.data.cpu().numpy() / (1024 * batch_size)
@@ -28,6 +29,7 @@ def get_metrics_dict(ce, aux_ce, kld, val_ce, val_aux_ce, val_kld, batch_size):
         'valid_aux_ce': val_aux_ce,
         'valid_kl': val_kl
     }
+
 
 def train_vae(path_config, feature_type, hyperparams, model_name):
     t.cuda.empty_cache()

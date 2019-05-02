@@ -1,3 +1,7 @@
+import warnings
+from sklearn.preprocessing import LabelEncoder
+import re
+import argparse
 import ml.utils as utils
 from mpl_toolkits.mplot3d import Axes3D
 from sklearn.cluster import KMeans
@@ -13,14 +17,10 @@ from keras import objectives
 import numpy as np
 import matplotlib.pyplot as plt
 plt.style.use('seaborn')
-import argparse
-import re
-from sklearn.preprocessing import LabelEncoder
 label_encoder = LabelEncoder()
 label_encoder.fit(np.array(['A', 'C', 'G', 'T', 'Z']))
 RUN_OPTIONS = ["lstm_vae_ordinal", "lstm_vae_kmer_4", "lstm_vae_kmer_5"]
-import ml.utils as utils
-import warnings
+
 
 def string_to_array(my_string):
     my_string = re.sub('[^ACGT]', 'Z', my_string)

@@ -1,3 +1,7 @@
+import warnings
+from sklearn.preprocessing import LabelEncoder
+import re
+import argparse
 import ml.utils as utils
 from mpl_toolkits.mplot3d import Axes3D
 from sklearn.cluster import KMeans
@@ -13,14 +17,10 @@ from keras import objectives
 import numpy as np
 import matplotlib.pyplot as plt
 plt.style.use('seaborn')
-import argparse
-import re
-from sklearn.preprocessing import LabelEncoder
 label_encoder = LabelEncoder()
 label_encoder.fit(np.array(['A', 'C', 'G', 'T', 'Z']))
 RUN_OPTIONS = ["lstm_vae_ordinal", "lstm_vae_kmer_4", "lstm_vae_kmer_5"]
-import ml.utils as utils
-import warnings
+
 
 def plotFigs3D(est, pred_new, savepath, args, predicted, path_config, scheme):
     fig = plt.figure(figsize=(4, 3))
@@ -40,14 +40,14 @@ def plotFigs3D(est, pred_new, savepath, args, predicted, path_config, scheme):
     ax.set_title(savepath)
     plt.savefig(path_config[args.model_name]['results'] + "/" + savepath)
 
+
 def plotFigs2D(est, pred_new, savepath, args, predicted, path_config, scheme):
     plt.figure(figsize=(4, 3))
     est.fit(predicted)
     labels = est.labels_
     for i in range(labels.shape[0]):
         plt.scatter(pred_new[i, 0], pred_new[i, 1],
-                   c=scheme[labels[i]], edgecolor='k')
-
+                    c=scheme[labels[i]], edgecolor='k')
 
     plt.xlabel('PC1')
     plt.ylabel('PC2')
